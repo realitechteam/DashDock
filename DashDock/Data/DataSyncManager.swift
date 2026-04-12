@@ -6,19 +6,24 @@ import WidgetKit
 final class DataSyncManager {
     var ga4Realtime: CachedGA4Realtime?
     var ga4Summary: CachedGA4Summary?
+    var adSenseRevenue: CachedAdSenseRevenue?
     var isRefreshing = false
     var lastError: String?
 
     private var ga4Client: GA4Client?
+    private var adSenseClient: AdSenseClient?
     private let store = SharedDataStore.shared
     private var realtimeTimer: Timer?
     private var reportTimer: Timer?
+    private var adSenseTimer: Timer?
 
     var realtimeInterval: TimeInterval = 30
     var reportInterval: TimeInterval = 300
+    var adSenseInterval: TimeInterval = 300  // 5 minutes
 
     func configure(apiClient: APIClient) {
         self.ga4Client = GA4Client(apiClient: apiClient)
+        self.adSenseClient = AdSenseClient(apiClient: apiClient)
         loadCachedData()
     }
 
@@ -39,10 +44,17 @@ final class DataSyncManager {
             }
         }
 
+        adSenseTimer = Timer.scheduledTimer(withTimeInterval: adSenseInterval, repeats: true) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                await self?.fetchAdSense()
+            }
+        }
+
         // Fetch immediately
         Task {
             await fetchRealtime()
             await fetchReports()
+            await fetchAdSense()
         }
     }
 
@@ -51,6 +63,8 @@ final class DataSyncManager {
         realtimeTimer = nil
         reportTimer?.invalidate()
         reportTimer = nil
+        adSenseTimer?.invalidate()
+        adSenseTimer = nil
     }
 
     // MARK: - Manual Refresh
@@ -58,9 +72,10 @@ final class DataSyncManager {
     func refreshAll() async {
         await fetchRealtime()
         await fetchReports()
+        await fetchAdSense()
     }
 
-    // MARK: - Fetch
+    // MARK: - Fetch GA4
 
     private func fetchRealtime() async {
         guard let client = ga4Client,
@@ -94,16 +109,12 @@ final class DataSyncManager {
         defer { isRefreshing = false }
 
         do {
-            // Daily summary with comparison (2 date ranges)
             let dailyResponse = try await client.fetchDailySummary(propertyID: propertyID)
             let topPagesResponse = try await client.fetchTopPages(propertyID: propertyID)
 
-            // Current period totals
             let totals = dailyResponse.totalMetrics
-            // Previous period totals (for comparison)
             let prevTotals = dailyResponse.prevTotalMetrics
 
-            // Parse daily metrics from rows (current period only)
             let currentRows = dailyResponse.rowData
             var dailyPageviews: [CachedGA4Summary.DailyMetric] = []
             var dailySessions: [CachedGA4Summary.DailyMetric] = []
@@ -149,8 +160,127 @@ final class DataSyncManager {
         }
     }
 
+    // MARK: - Fetch AdSense
+
+    private func fetchAdSense() async {
+        guard let client = adSenseClient,
+              let accountName = store.loadCurrentAccount()?.adSenseAccountName
+        else { return }
+
+        do {
+            // Fetch today's summary
+            let todayReport = try await client.fetchTodaySummary(accountName: accountName)
+            let todayTotals = parseTotals(todayReport)
+
+            // Fetch yesterday for comparison
+            let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date())!
+            let yDateStr = dateString(yesterday)
+            let yesterdayReport = try await client.fetchReport(
+                accountName: accountName,
+                startDate: AdSenseDateRange(startDate: yDateStr, endDate: yDateStr)
+            )
+            let yesterdayTotals = parseTotals(yesterdayReport)
+
+            // Fetch 7-day and 30-day summaries
+            let report7d = try await client.fetchRangeSummary(accountName: accountName, days: 7)
+            let report30d = try await client.fetchRangeSummary(accountName: accountName, days: 30)
+
+            let earnings7d = parseEarnings(report7d)
+            let earnings30d = parseEarnings(report30d)
+
+            // Fetch daily breakdown for sparkline
+            let dailyReport = try await client.fetchDailyReport(accountName: accountName, days: 7)
+            let dailyEarnings = parseDailyEarnings(dailyReport)
+
+            let cached = CachedAdSenseRevenue(
+                todayEarnings: todayTotals.earnings,
+                yesterdayEarnings: yesterdayTotals.earnings,
+                last7DaysEarnings: earnings7d,
+                last30DaysEarnings: earnings30d,
+                todayClicks: todayTotals.clicks,
+                todayImpressions: todayTotals.impressions,
+                todayPageviewsRPM: todayTotals.rpm,
+                todayCPC: todayTotals.cpc,
+                dailyEarnings: dailyEarnings,
+                timestamp: Date()
+            )
+            adSenseRevenue = cached
+            store.saveAdSenseRevenue(cached)
+            WidgetCenter.shared.reloadAllTimelines()
+        } catch {
+            // Don't overwrite lastError from GA4 — AdSense errors are secondary
+            print("[AdSense] Error: \(error.localizedDescription)")
+        }
+    }
+
+    // MARK: - AdSense Parse Helpers
+
+    private struct AdSenseTotals {
+        let earnings: Double
+        let clicks: Int
+        let impressions: Int
+        let rpm: Double
+        let cpc: Double
+    }
+
+    private func parseTotals(_ report: AdSenseReportResponse) -> AdSenseTotals {
+        let headers = report.headers ?? []
+        let cells = report.totals?.cells ?? []
+
+        var earnings = 0.0, clicks = 0, impressions = 0, rpm = 0.0, cpc = 0.0
+
+        for (i, header) in headers.enumerated() where i < cells.count {
+            let val = cells[i].value ?? "0"
+            switch header.name {
+            case "ESTIMATED_EARNINGS":
+                earnings = Double(val) ?? 0
+            case "CLICKS":
+                clicks = Int(val) ?? 0
+            case "IMPRESSIONS":
+                impressions = Int(val) ?? 0
+            case "PAGE_VIEWS_RPM":
+                rpm = Double(val) ?? 0
+            case "COST_PER_CLICK":
+                cpc = Double(val) ?? 0
+            default:
+                break
+            }
+        }
+
+        return AdSenseTotals(earnings: earnings, clicks: clicks, impressions: impressions, rpm: rpm, cpc: cpc)
+    }
+
+    private func parseEarnings(_ report: AdSenseReportResponse) -> Double {
+        let cells = report.totals?.cells ?? []
+        return Double(cells.first?.value ?? "0") ?? 0
+    }
+
+    private func parseDailyEarnings(_ report: AdSenseReportResponse) -> [CachedAdSenseRevenue.DailyEarning] {
+        let headers = report.headers ?? []
+        let rows = report.rows ?? []
+
+        let dateIdx = headers.firstIndex { $0.name == "DATE" } ?? 0
+        let earningsIdx = headers.firstIndex { $0.name == "ESTIMATED_EARNINGS" } ?? 1
+
+        return rows.compactMap { row in
+            guard dateIdx < row.cells.count, earningsIdx < row.cells.count else { return nil }
+            let date = row.cells[dateIdx].value ?? ""
+            let earnings = Double(row.cells[earningsIdx].value ?? "0") ?? 0
+            return CachedAdSenseRevenue.DailyEarning(date: date, earnings: earnings)
+        }
+    }
+
+    private func dateString(_ date: Date) -> String {
+        let fmt = DateFormatter()
+        fmt.dateFormat = "yyyy-MM-dd"
+        return fmt.string(from: date)
+    }
+
+    // MARK: - Cache
+
     private func loadCachedData() {
         ga4Realtime = store.loadGA4Realtime()
         ga4Summary = store.loadGA4Summary()
+        adSenseRevenue = store.loadAdSenseRevenue()
     }
 }

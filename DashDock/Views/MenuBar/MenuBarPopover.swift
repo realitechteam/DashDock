@@ -140,6 +140,11 @@ struct MenuBarPopover: View {
             )
         }
 
+        // AdSense Revenue
+        if let adsense = syncManager.adSenseRevenue {
+            AdSenseCard(data: adsense)
+        }
+
         // Top pages (realtime)
         if let realtime = syncManager.ga4Realtime, !realtime.topPages.isEmpty {
             TopPagesCard(pages: realtime.topPages)

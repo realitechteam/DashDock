@@ -9,6 +9,7 @@ struct GoogleAccount: Codable, Identifiable, Hashable {
     var ga4PropertyID: String?
     var ga4PropertyName: String?
     var adSenseAccountID: String?
+    var adSenseAccountName: String?  // Full name: "accounts/pub-xxx"
     var searchConsoleSiteURL: String?
 
     func hash(into hasher: inout Hasher) {

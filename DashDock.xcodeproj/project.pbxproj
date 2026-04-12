@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		049E04A3854C0B7568F44093 /* AdSenseModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B60BCD81CB0DB24F14074 /* AdSenseModels.swift */; };
 		0B0F476EEE29B30D766BF58B /* RateLimiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C58DD80EC9DB1670FE520ED /* RateLimiter.swift */; };
 		0EFADB501A406B01D1B1D0B4 /* DashDockWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B53C929656C90300B1124CA4 /* DashDockWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		217864D715F2F05B9399503A /* ColorTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146FCCD95AF32978C93A4070 /* ColorTheme.swift */; };
@@ -18,6 +19,7 @@
 		4580845F3314BAA4D38D602B /* GA4Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93029C85BA8C60DF6C1DF29 /* GA4Client.swift */; };
 		57A9C26E4273D24A753D1A91 /* RealtimeUsersWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452CD888784691BB627DF399 /* RealtimeUsersWidget.swift */; };
 		644F04DFA15ACC3E3B1FCA53 /* CacheModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468894B324E8B95A95DC0DDC /* CacheModels.swift */; };
+		6D3B112A890C8872D1E1A043 /* AdSenseCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE96ADEC4186C10A5C610C2F /* AdSenseCard.swift */; };
 		72A66F12B0904C22B034FBAF /* GA4Entry.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9C02FBD12FC08F61FA491BD /* GA4Entry.swift */; };
 		74DCF2B62ED99FC8001FCC47 /* ChartComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BF8CEAA8884EDA7E314BCD /* ChartComponents.swift */; };
 		761D6A7BA2476BDC3B2F005F /* DashDockWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A0FED751D15E7C1293CD2E /* DashDockWidgets.swift */; };
@@ -29,6 +31,7 @@
 		8C7FE148AA99083185948F6C /* DataSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8E3E71DE3B0364435ED32E4 /* DataSyncManager.swift */; };
 		912EF081755C98D464AE31F8 /* GA4TimelineProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81C41C8FFB03F525C2EA2A5 /* GA4TimelineProvider.swift */; };
 		9B29E7287E64CD6080CBE903 /* MenuBarLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 898F0F0FC6E8DF616365FF24 /* MenuBarLabel.swift */; };
+		9FA1F784569608027185B0BD /* AdSenseClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5435C9E9CC6D78B0F4F18BB7 /* AdSenseClient.swift */; };
 		A23F6794498A46D30415E873 /* DashDockApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A903C1A5E226A0208E68665 /* DashDockApp.swift */; };
 		A26CA92C7309A3ABC14710B9 /* NumberFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E3C763DA287792B602CE6C /* NumberFormatting.swift */; };
 		A4F7369B393D3DAE39D0A580 /* TokenStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD58C86DD5B736DF23D891BD /* TokenStore.swift */; };
@@ -77,7 +80,9 @@
 		452CD888784691BB627DF399 /* RealtimeUsersWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealtimeUsersWidget.swift; sourceTree = "<group>"; };
 		468894B324E8B95A95DC0DDC /* CacheModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheModels.swift; sourceTree = "<group>"; };
 		52E2D34545E309A63AD22795 /* GA4Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GA4Models.swift; sourceTree = "<group>"; };
+		5435C9E9CC6D78B0F4F18BB7 /* AdSenseClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdSenseClient.swift; sourceTree = "<group>"; };
 		630CDFE2D492EE7828DB8289 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
+		648B60BCD81CB0DB24F14074 /* AdSenseModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdSenseModels.swift; sourceTree = "<group>"; };
 		695860EDBAB2207C53FF0C73 /* GoogleAuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleAuthManager.swift; sourceTree = "<group>"; };
 		898F0F0FC6E8DF616365FF24 /* MenuBarLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarLabel.swift; sourceTree = "<group>"; };
 		8B0378FDD8D0BCBD44CBA35D /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
@@ -92,6 +97,7 @@
 		BD58C86DD5B736DF23D891BD /* TokenStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenStore.swift; sourceTree = "<group>"; };
 		C40045AAD533953034218842 /* RealtimeUsersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealtimeUsersView.swift; sourceTree = "<group>"; };
 		C85D57043851FB0660AD0FFA /* DashDock.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DashDock.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE96ADEC4186C10A5C610C2F /* AdSenseCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdSenseCard.swift; sourceTree = "<group>"; };
 		D6BF8CEAA8884EDA7E314BCD /* ChartComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartComponents.swift; sourceTree = "<group>"; };
 		D93029C85BA8C60DF6C1DF29 /* GA4Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GA4Client.swift; sourceTree = "<group>"; };
 		E24A824173FC17013105F154 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -132,6 +138,7 @@
 		39D0FF84631ABAD9DD8BA4F5 /* API */ = {
 			isa = PBXGroup;
 			children = (
+				B4757C042A88691C905B5F92 /* AdSense */,
 				9E12D81C63DC7E250ED7E66A /* GA4 */,
 				2CAEA1D2E4630554B7896F97 /* APIClient.swift */,
 				3C58DD80EC9DB1670FE520ED /* RateLimiter.swift */,
@@ -285,10 +292,20 @@
 			path = GA4;
 			sourceTree = "<group>";
 		};
+		B4757C042A88691C905B5F92 /* AdSense */ = {
+			isa = PBXGroup;
+			children = (
+				5435C9E9CC6D78B0F4F18BB7 /* AdSenseClient.swift */,
+				648B60BCD81CB0DB24F14074 /* AdSenseModels.swift */,
+			);
+			path = AdSense;
+			sourceTree = "<group>";
+		};
 		B9BA33939F8CB9D64148D2CF /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				7B7C898C01F0410010C317E3 /* Components */,
+				F0308C5E86995FAAEF24EC59 /* Dashboard */,
 				8E1446745744DD72BE4E857D /* MenuBar */,
 				269DA7E0709824B778687B4D /* Settings */,
 			);
@@ -311,6 +328,14 @@
 				B9C02FBD12FC08F61FA491BD /* GA4Entry.swift */,
 			);
 			path = WidgetEntries;
+			sourceTree = "<group>";
+		};
+		F0308C5E86995FAAEF24EC59 /* Dashboard */ = {
+			isa = PBXGroup;
+			children = (
+				CE96ADEC4186C10A5C610C2F /* AdSenseCard.swift */,
+			);
+			path = Dashboard;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -430,6 +455,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				8C3BEFE6068A5105B570931D /* APIClient.swift in Sources */,
+				6D3B112A890C8872D1E1A043 /* AdSenseCard.swift in Sources */,
+				9FA1F784569608027185B0BD /* AdSenseClient.swift in Sources */,
+				049E04A3854C0B7568F44093 /* AdSenseModels.swift in Sources */,
 				2C47EFBE153469438FC914DA /* AppState.swift in Sources */,
 				644F04DFA15ACC3E3B1FCA53 /* CacheModels.swift in Sources */,
 				74DCF2B62ED99FC8001FCC47 /* ChartComponents.swift in Sources */,

@@ -120,9 +120,7 @@ struct PropertiesSettingsView: View {
             }
 
             Section("AdSense") {
-                Text("Coming in Phase 2")
-                    .foregroundStyle(.secondary)
-                    .font(.caption)
+                AdSenseAccountSection(authManager: authManager, syncManager: syncManager)
             }
 
             Section("Search Console") {
@@ -346,6 +344,122 @@ struct UpdateSettingsView: View {
         let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "?"
         let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "?"
         return "\(version) (\(build))"
+    }
+}
+
+// MARK: - AdSense Account Picker
+
+struct AdSenseAccountSection: View {
+    let authManager: GoogleAuthManager
+    let syncManager: DataSyncManager
+
+    @State private var adSenseAccounts: [AdSenseAccount] = []
+    @State private var isLoading = false
+    @State private var errorMsg: String?
+
+    var body: some View {
+        Group {
+            if isLoading {
+                HStack {
+                    ProgressView().scaleEffect(0.7)
+                    Text("Loading AdSense accounts...")
+                        .font(.caption)
+                }
+            } else if let errorMsg {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(errorMsg)
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                    Button("Retry") { loadAccounts() }
+                        .font(.caption)
+                }
+            } else if adSenseAccounts.isEmpty {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("No AdSense accounts found")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Button("Reload") { loadAccounts() }
+                        .font(.caption)
+                }
+            } else {
+                ForEach(adSenseAccounts) { account in
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text(account.displayName)
+                                .font(.callout)
+                            Text(account.accountID)
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                        if authManager.currentAccount?.adSenseAccountName == account.name {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundStyle(.green)
+                        } else {
+                            Button("Connect") {
+                                selectAdSense(account)
+                            }
+                            .buttonStyle(.bordered)
+                            .controlSize(.small)
+                        }
+                    }
+                }
+
+                if authManager.currentAccount?.adSenseAccountName != nil {
+                    Button("Disconnect AdSense", role: .destructive) {
+                        disconnectAdSense()
+                    }
+                    .font(.caption)
+                }
+            }
+        }
+        .task { loadAccounts() }
+    }
+
+    private func loadAccounts() {
+        guard authManager.isAuthenticated else { return }
+        isLoading = true
+        errorMsg = nil
+        Task {
+            let apiClient = APIClient(authManager: authManager)
+            let client = AdSenseClient(apiClient: apiClient)
+            do {
+                adSenseAccounts = try await client.listAccounts()
+            } catch {
+                errorMsg = "Failed to load: \(error.localizedDescription)"
+            }
+            isLoading = false
+        }
+    }
+
+    private func selectAdSense(_ adAccount: AdSenseAccount) {
+        guard var account = authManager.currentAccount else { return }
+        account.adSenseAccountID = adAccount.accountID
+        account.adSenseAccountName = adAccount.name
+        saveAccount(account)
+    }
+
+    private func disconnectAdSense() {
+        guard var account = authManager.currentAccount else { return }
+        account.adSenseAccountID = nil
+        account.adSenseAccountName = nil
+        saveAccount(account)
+    }
+
+    private func saveAccount(_ account: GoogleAccount) {
+        SharedDataStore.shared.saveCurrentAccount(account)
+        authManager.currentAccount = account
+
+        var all = SharedDataStore.shared.loadAccounts()
+        if let idx = all.firstIndex(where: { $0.id == account.id }) {
+            all[idx] = account
+            SharedDataStore.shared.saveAccounts(all)
+        }
+
+        // Restart sync
+        let apiClient = APIClient(authManager: authManager)
+        syncManager.configure(apiClient: apiClient)
+        syncManager.startPolling()
     }
 }
 
