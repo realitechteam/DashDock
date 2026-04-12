@@ -131,17 +131,29 @@ struct GA4ReportResponse: Decodable {
     let totals: [GA4Row]?
     let rowCount: Int?
 
+    /// Total metrics for the first (current) date range
     var totalMetrics: [Int] {
         guard let totals, let first = totals.first else { return [] }
         return first.metricValues?.compactMap { Int($0.value) } ?? []
     }
 
+    /// Total metrics for the second (previous) date range — used for comparison
+    var prevTotalMetrics: [Int] {
+        guard let totals, totals.count > 1 else { return [] }
+        return totals[1].metricValues?.compactMap { Int($0.value) } ?? []
+    }
+
+    /// Row data — filters to first date range only when multiple ranges used
     var rowData: [(dimensions: [String], metrics: [String])] {
         guard let rows else { return [] }
-        return rows.map { row in
+        return rows.compactMap { row in
             let dims = row.dimensionValues?.map(\.value) ?? []
             let mets = row.metricValues?.map(\.value) ?? []
-            return (dimensions: dims, metrics: mets)
+            // When using multiple date ranges, rows include a "dateRange" dimension
+            // Filter to "date_range_0" (current period) only
+            if dims.contains("date_range_1") { return nil }
+            let cleanDims = dims.filter { $0 != "date_range_0" }
+            return (dimensions: cleanDims, metrics: mets)
         }
     }
 }

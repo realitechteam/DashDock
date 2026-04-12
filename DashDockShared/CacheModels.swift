@@ -19,8 +19,14 @@ struct CachedGA4Summary: Codable {
     let pageviews: Int
     let sessions: Int
     let newUsers: Int
+    // Previous period for comparison
+    let prevPageviews: Int
+    let prevSessions: Int
+    let prevNewUsers: Int
     let topPages: [PageSummary]
     let dailyPageviews: [DailyMetric]
+    let dailySessions: [DailyMetric]
+    let dailyNewUsers: [DailyMetric]
     let timestamp: Date
 
     struct PageSummary: Codable {
@@ -36,6 +42,16 @@ struct CachedGA4Summary: Codable {
 
     var isStale: Bool {
         Date().timeIntervalSince(timestamp) > 600
+    }
+
+    // Percentage change helpers
+    var pageviewsChange: Double? { percentChange(current: pageviews, previous: prevPageviews) }
+    var sessionsChange: Double? { percentChange(current: sessions, previous: prevSessions) }
+    var newUsersChange: Double? { percentChange(current: newUsers, previous: prevNewUsers) }
+
+    private func percentChange(current: Int, previous: Int) -> Double? {
+        guard previous > 0 else { return current > 0 ? 100.0 : nil }
+        return Double(current - previous) / Double(previous) * 100.0
     }
 }
 

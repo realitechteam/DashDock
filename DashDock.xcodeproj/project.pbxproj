@@ -19,6 +19,7 @@
 		57A9C26E4273D24A753D1A91 /* RealtimeUsersWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452CD888784691BB627DF399 /* RealtimeUsersWidget.swift */; };
 		644F04DFA15ACC3E3B1FCA53 /* CacheModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468894B324E8B95A95DC0DDC /* CacheModels.swift */; };
 		72A66F12B0904C22B034FBAF /* GA4Entry.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9C02FBD12FC08F61FA491BD /* GA4Entry.swift */; };
+		74DCF2B62ED99FC8001FCC47 /* ChartComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6BF8CEAA8884EDA7E314BCD /* ChartComponents.swift */; };
 		761D6A7BA2476BDC3B2F005F /* DashDockWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A0FED751D15E7C1293CD2E /* DashDockWidgets.swift */; };
 		7EE492105771E99D3ACD5B0E /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 63C31AFFF7CCC9C31E57A1DE /* Sparkle */; };
 		7F4AD8CC9760356321639E09 /* CacheModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468894B324E8B95A95DC0DDC /* CacheModels.swift */; };
@@ -91,6 +92,7 @@
 		BD58C86DD5B736DF23D891BD /* TokenStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenStore.swift; sourceTree = "<group>"; };
 		C40045AAD533953034218842 /* RealtimeUsersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealtimeUsersView.swift; sourceTree = "<group>"; };
 		C85D57043851FB0660AD0FFA /* DashDock.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DashDock.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D6BF8CEAA8884EDA7E314BCD /* ChartComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartComponents.swift; sourceTree = "<group>"; };
 		D93029C85BA8C60DF6C1DF29 /* GA4Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GA4Client.swift; sourceTree = "<group>"; };
 		E24A824173FC17013105F154 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		E2A0FED751D15E7C1293CD2E /* DashDockWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashDockWidgets.swift; sourceTree = "<group>"; };
@@ -209,6 +211,14 @@
 			path = WidgetViews;
 			sourceTree = "<group>";
 		};
+		7B7C898C01F0410010C317E3 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				D6BF8CEAA8884EDA7E314BCD /* ChartComponents.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
 		7D476F9F396875B583BF598E = {
 			isa = PBXGroup;
 			children = (
@@ -278,6 +288,7 @@
 		B9BA33939F8CB9D64148D2CF /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				7B7C898C01F0410010C317E3 /* Components */,
 				8E1446745744DD72BE4E857D /* MenuBar */,
 				269DA7E0709824B778687B4D /* Settings */,
 			);
@@ -421,6 +432,7 @@
 				8C3BEFE6068A5105B570931D /* APIClient.swift in Sources */,
 				2C47EFBE153469438FC914DA /* AppState.swift in Sources */,
 				644F04DFA15ACC3E3B1FCA53 /* CacheModels.swift in Sources */,
+				74DCF2B62ED99FC8001FCC47 /* ChartComponents.swift in Sources */,
 				217864D715F2F05B9399503A /* ColorTheme.swift in Sources */,
 				A23F6794498A46D30415E873 /* DashDockApp.swift in Sources */,
 				8C7FE148AA99083185948F6C /* DataSyncManager.swift in Sources */,

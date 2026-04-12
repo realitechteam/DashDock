@@ -53,6 +53,7 @@ final class GA4Client {
 
     // MARK: - Reports
 
+    /// Fetch daily summary with comparison: current 7 days vs previous 7 days
     func fetchDailySummary(propertyID: String, days: Int = 7) async throws -> GA4ReportResponse {
         guard await rateLimiter.tryAcquire() else {
             let wait = await rateLimiter.secondsUntilAvailable()
@@ -62,7 +63,10 @@ final class GA4Client {
         let url = URL(string: "\(baseURL)/properties/\(propertyID):runReport")!
         let request = GA4ReportRequest(
             dateRanges: [
+                // Current period
                 GA4DateRange(startDate: "\(days)daysAgo", endDate: "today"),
+                // Previous period for comparison
+                GA4DateRange(startDate: "\(days * 2)daysAgo", endDate: "\(days + 1)daysAgo"),
             ],
             metrics: [
                 GA4Metric(name: "screenPageViews"),
@@ -76,7 +80,7 @@ final class GA4Client {
             orderBys: [
                 GA4OrderBy(dimension: GA4OrderBy.DimensionOrder(dimensionName: "date")),
             ],
-            limit: days + 1
+            limit: (days + 1) * 2
         )
         return try await apiClient.post(url: url, body: request)
     }

@@ -94,16 +94,32 @@ final class DataSyncManager {
         defer { isRefreshing = false }
 
         do {
+            // Daily summary with comparison (2 date ranges)
             let dailyResponse = try await client.fetchDailySummary(propertyID: propertyID)
             let topPagesResponse = try await client.fetchTopPages(propertyID: propertyID)
 
+            // Current period totals
             let totals = dailyResponse.totalMetrics
-            let dailyPageviews = dailyResponse.rowData.map {
-                CachedGA4Summary.DailyMetric(
-                    date: $0.dimensions.first ?? "",
-                    value: Int($0.metrics.first ?? "0") ?? 0
-                )
+            // Previous period totals (for comparison)
+            let prevTotals = dailyResponse.prevTotalMetrics
+
+            // Parse daily metrics from rows (current period only)
+            let currentRows = dailyResponse.rowData
+            var dailyPageviews: [CachedGA4Summary.DailyMetric] = []
+            var dailySessions: [CachedGA4Summary.DailyMetric] = []
+            var dailyNewUsers: [CachedGA4Summary.DailyMetric] = []
+
+            for row in currentRows {
+                let date = row.dimensions.first ?? ""
+                let pvVal = Int(row.metrics.count > 0 ? row.metrics[0] : "0") ?? 0
+                let sessVal = Int(row.metrics.count > 1 ? row.metrics[1] : "0") ?? 0
+                let nuVal = Int(row.metrics.count > 2 ? row.metrics[2] : "0") ?? 0
+
+                dailyPageviews.append(.init(date: date, value: pvVal))
+                dailySessions.append(.init(date: date, value: sessVal))
+                dailyNewUsers.append(.init(date: date, value: nuVal))
             }
+
             let topPages = topPagesResponse.rowData.map {
                 CachedGA4Summary.PageSummary(
                     path: $0.dimensions.first ?? "",
@@ -115,8 +131,13 @@ final class DataSyncManager {
                 pageviews: totals.count > 0 ? totals[0] : 0,
                 sessions: totals.count > 1 ? totals[1] : 0,
                 newUsers: totals.count > 2 ? totals[2] : 0,
+                prevPageviews: prevTotals.count > 0 ? prevTotals[0] : 0,
+                prevSessions: prevTotals.count > 1 ? prevTotals[1] : 0,
+                prevNewUsers: prevTotals.count > 2 ? prevTotals[2] : 0,
                 topPages: topPages,
                 dailyPageviews: dailyPageviews,
+                dailySessions: dailySessions,
+                dailyNewUsers: dailyNewUsers,
                 timestamp: Date()
             )
             ga4Summary = cached
