@@ -1,0 +1,37 @@
+# Xcode
+*.xcuserdata/
+*.xcworkspace/
+xcuserdata/
+DerivedData/
+build/
+releases/
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.moved-aside
+*.xcodeproj/project.xcworkspace/
+*.xcodeproj/xcuserdata/
+
+# Config (contains secrets — NEVER commit)
+Config.xcconfig
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Packages/
+Package.resolved
+
+# Misc
+*.swp
+*~.nib
+*.log
+.claude/
+DashDock.dmg
+*.dmg

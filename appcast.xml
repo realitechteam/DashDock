@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <channel>
+        <title>DashDock Updates</title>
+        <link>https://realitech.dev/dashdock/appcast.xml</link>
+        <description>DashDock — Real-time Google Analytics, AdSense &amp; Search Console for your Mac Desktop.</description>
+        <language>en</language>
+
+        <!-- Paste <item> entries from releases/appcast-entry-vX.X.X.xml here -->
+        <!-- Latest version should be the FIRST item -->
+
+        <item>
+            <title>Version 1.0.0</title>
+            <sparkle:version>1</sparkle:version>
+            <sparkle:shortVersionString>1.0.0</sparkle:shortVersionString>
+            <description><![CDATA[
+                <h2>DashDock v1.0.0 — Initial Release</h2>
+                <ul>
+                    <li>Real-time Google Analytics 4 monitoring</li>
+                    <li>Active users, pageviews, sessions, top pages</li>
+                    <li>Desktop widgets via WidgetKit</li>
+                    <li>Menu bar app with quick stats popover</li>
+                    <li>Google OAuth 2.0 authentication</li>
+                </ul>
+            ]]></description>
+            <pubDate>Fri, 11 Apr 2026 00:00:00 +0700</pubDate>
+            <enclosure
+                url="https://realitech.dev/dashdock/releases/DashDock-v1.0.0.dmg"
+                sparkle:edSignature="REPLACE_WITH_ACTUAL_SIGNATURE"
+                length="0"
+                type="application/octet-stream" />
+        </item>
+
+    </channel>
+</rss>

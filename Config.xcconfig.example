@@ -1,0 +1,11 @@
+// Config.xcconfig
+// Copy this file to Config.xcconfig and fill in your credentials
+// DO NOT commit Config.xcconfig to git!
+
+// Google OAuth 2.0 — Create at https://console.cloud.google.com
+// Type: Desktop app
+GOOGLE_CLIENT_ID = YOUR_CLIENT_ID_HERE
+GOOGLE_CLIENT_SECRET = YOUR_CLIENT_SECRET_HERE
+
+// Sparkle EdDSA public key — Generate with: ./scripts/release.sh generate-keys
+SPARKLE_ED_PUBLIC_KEY = YOUR_PUBLIC_KEY_HERE

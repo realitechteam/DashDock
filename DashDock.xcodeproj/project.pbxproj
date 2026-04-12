@@ -1,0 +1,689 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0B0F476EEE29B30D766BF58B /* RateLimiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C58DD80EC9DB1670FE520ED /* RateLimiter.swift */; };
+		0EFADB501A406B01D1B1D0B4 /* DashDockWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B53C929656C90300B1124CA4 /* DashDockWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		217864D715F2F05B9399503A /* ColorTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146FCCD95AF32978C93A4070 /* ColorTheme.swift */; };
+		27A7E5CD8E04423D6F608518 /* MenuBarPopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = F55FDBBE3D4412C51E11E672 /* MenuBarPopover.swift */; };
+		2C47EFBE153469438FC914DA /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0378FDD8D0BCBD44CBA35D /* AppState.swift */; };
+		307F0CA37DC75B50619EDDF4 /* SharedDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA001B72EAB18FC306BA6AC /* SharedDataStore.swift */; };
+		3226D1BF6E3A5192508B87D8 /* GoogleAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 695860EDBAB2207C53FF0C73 /* GoogleAuthManager.swift */; };
+		38C0614CE67E3637CE647707 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7C5706DC317FCB593E3C16 /* SettingsView.swift */; };
+		4580845F3314BAA4D38D602B /* GA4Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = D93029C85BA8C60DF6C1DF29 /* GA4Client.swift */; };
+		57A9C26E4273D24A753D1A91 /* RealtimeUsersWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452CD888784691BB627DF399 /* RealtimeUsersWidget.swift */; };
+		644F04DFA15ACC3E3B1FCA53 /* CacheModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468894B324E8B95A95DC0DDC /* CacheModels.swift */; };
+		72A66F12B0904C22B034FBAF /* GA4Entry.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9C02FBD12FC08F61FA491BD /* GA4Entry.swift */; };
+		761D6A7BA2476BDC3B2F005F /* DashDockWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A0FED751D15E7C1293CD2E /* DashDockWidgets.swift */; };
+		7EE492105771E99D3ACD5B0E /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 63C31AFFF7CCC9C31E57A1DE /* Sparkle */; };
+		7F4AD8CC9760356321639E09 /* CacheModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 468894B324E8B95A95DC0DDC /* CacheModels.swift */; };
+		83F7A5B90CD7EF014485F8EE /* GA4Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52E2D34545E309A63AD22795 /* GA4Models.swift */; };
+		8675F5ADCA23B9E91087B1F4 /* RealtimeUsersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40045AAD533953034218842 /* RealtimeUsersView.swift */; };
+		8C3BEFE6068A5105B570931D /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CAEA1D2E4630554B7896F97 /* APIClient.swift */; };
+		8C7FE148AA99083185948F6C /* DataSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8E3E71DE3B0364435ED32E4 /* DataSyncManager.swift */; };
+		912EF081755C98D464AE31F8 /* GA4TimelineProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E81C41C8FFB03F525C2EA2A5 /* GA4TimelineProvider.swift */; };
+		9B29E7287E64CD6080CBE903 /* MenuBarLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 898F0F0FC6E8DF616365FF24 /* MenuBarLabel.swift */; };
+		A23F6794498A46D30415E873 /* DashDockApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A903C1A5E226A0208E68665 /* DashDockApp.swift */; };
+		A26CA92C7309A3ABC14710B9 /* NumberFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E3C763DA287792B602CE6C /* NumberFormatting.swift */; };
+		A4F7369B393D3DAE39D0A580 /* TokenStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD58C86DD5B736DF23D891BD /* TokenStore.swift */; };
+		A984B35DC62D7F162C4E9021 /* UpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A576039933F350371D4F4C9B /* UpdateManager.swift */; };
+		AA801B5A7C0013182AA5400A /* GoogleAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB2AD8478F894F2866C0482 /* GoogleAccount.swift */; };
+		D5C8232A771C22457A7999A8 /* SharedDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA001B72EAB18FC306BA6AC /* SharedDataStore.swift */; };
+		E3214BFAE753EE82BCA913C5 /* NumberFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E3C763DA287792B602CE6C /* NumberFormatting.swift */; };
+		F14AE75852D657655EBE3CFB /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630CDFE2D492EE7828DB8289 /* KeychainHelper.swift */; };
+		F2C1CF29A2E8218763468486 /* GoogleAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB2AD8478F894F2866C0482 /* GoogleAccount.swift */; };
+		FBE31EFCCEC4A87ED1CBE1D8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 41C8268D40DD0D20994CFE5B /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		FDB451261319C26963BDE1F3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FCBB9BEDE45EA03501145627 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D280B6C149EA86FDA917F266;
+			remoteInfo = DashDockWidgets;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		EF4B1694877687544728162E /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				0EFADB501A406B01D1B1D0B4 /* DashDockWidgets.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		146FCCD95AF32978C93A4070 /* ColorTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorTheme.swift; sourceTree = "<group>"; };
+		282C5BE6BD42D5ACC4EB7292 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		2CAEA1D2E4630554B7896F97 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
+		2CB2AD8478F894F2866C0482 /* GoogleAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleAccount.swift; sourceTree = "<group>"; };
+		3B86DE2A1AC2D87C663E91E9 /* DashDockWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DashDockWidgets.entitlements; sourceTree = "<group>"; };
+		3C58DD80EC9DB1670FE520ED /* RateLimiter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateLimiter.swift; sourceTree = "<group>"; };
+		3D5A2F6D0F5957501EBBF1A6 /* DashDock.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DashDock.entitlements; sourceTree = "<group>"; };
+		41C8268D40DD0D20994CFE5B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		452CD888784691BB627DF399 /* RealtimeUsersWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealtimeUsersWidget.swift; sourceTree = "<group>"; };
+		468894B324E8B95A95DC0DDC /* CacheModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheModels.swift; sourceTree = "<group>"; };
+		52E2D34545E309A63AD22795 /* GA4Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GA4Models.swift; sourceTree = "<group>"; };
+		630CDFE2D492EE7828DB8289 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
+		695860EDBAB2207C53FF0C73 /* GoogleAuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleAuthManager.swift; sourceTree = "<group>"; };
+		898F0F0FC6E8DF616365FF24 /* MenuBarLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarLabel.swift; sourceTree = "<group>"; };
+		8B0378FDD8D0BCBD44CBA35D /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		8BA001B72EAB18FC306BA6AC /* SharedDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedDataStore.swift; sourceTree = "<group>"; };
+		9A903C1A5E226A0208E68665 /* DashDockApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashDockApp.swift; sourceTree = "<group>"; };
+		A4E3C763DA287792B602CE6C /* NumberFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberFormatting.swift; sourceTree = "<group>"; };
+		A576039933F350371D4F4C9B /* UpdateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateManager.swift; sourceTree = "<group>"; };
+		AB7C5706DC317FCB593E3C16 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		B53C929656C90300B1124CA4 /* DashDockWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DashDockWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8E3E71DE3B0364435ED32E4 /* DataSyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSyncManager.swift; sourceTree = "<group>"; };
+		B9C02FBD12FC08F61FA491BD /* GA4Entry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GA4Entry.swift; sourceTree = "<group>"; };
+		BD58C86DD5B736DF23D891BD /* TokenStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenStore.swift; sourceTree = "<group>"; };
+		C40045AAD533953034218842 /* RealtimeUsersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealtimeUsersView.swift; sourceTree = "<group>"; };
+		C85D57043851FB0660AD0FFA /* DashDock.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DashDock.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D93029C85BA8C60DF6C1DF29 /* GA4Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GA4Client.swift; sourceTree = "<group>"; };
+		E24A824173FC17013105F154 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		E2A0FED751D15E7C1293CD2E /* DashDockWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashDockWidgets.swift; sourceTree = "<group>"; };
+		E81C41C8FFB03F525C2EA2A5 /* GA4TimelineProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GA4TimelineProvider.swift; sourceTree = "<group>"; };
+		F55FDBBE3D4412C51E11E672 /* MenuBarPopover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarPopover.swift; sourceTree = "<group>"; };
+		F5617F4CF0368A04B2643DDE /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9FC4812A9537F2ABCA583A24 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7EE492105771E99D3ACD5B0E /* Sparkle in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		03F1795E38ADA13BA14A7CC9 /* Widgets */ = {
+			isa = PBXGroup;
+			children = (
+				452CD888784691BB627DF399 /* RealtimeUsersWidget.swift */,
+			);
+			path = Widgets;
+			sourceTree = "<group>";
+		};
+		269DA7E0709824B778687B4D /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				AB7C5706DC317FCB593E3C16 /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		39D0FF84631ABAD9DD8BA4F5 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				9E12D81C63DC7E250ED7E66A /* GA4 */,
+				2CAEA1D2E4630554B7896F97 /* APIClient.swift */,
+				3C58DD80EC9DB1670FE520ED /* RateLimiter.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
+		3EBE5EE49532B421ACAF7F36 /* DashDockShared */ = {
+			isa = PBXGroup;
+			children = (
+				468894B324E8B95A95DC0DDC /* CacheModels.swift */,
+				2CB2AD8478F894F2866C0482 /* GoogleAccount.swift */,
+				A4E3C763DA287792B602CE6C /* NumberFormatting.swift */,
+				8BA001B72EAB18FC306BA6AC /* SharedDataStore.swift */,
+			);
+			path = DashDockShared;
+			sourceTree = "<group>";
+		};
+		4B0384F2C2F0DACFB32ECC0B /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				B8E3E71DE3B0364435ED32E4 /* DataSyncManager.swift */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		55A25CE91DD558396D91663D /* TimelineProviders */ = {
+			isa = PBXGroup;
+			children = (
+				E81C41C8FFB03F525C2EA2A5 /* GA4TimelineProvider.swift */,
+			);
+			path = TimelineProviders;
+			sourceTree = "<group>";
+		};
+		589016AA12B39948599F92B7 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				8B0378FDD8D0BCBD44CBA35D /* AppState.swift */,
+				9A903C1A5E226A0208E68665 /* DashDockApp.swift */,
+				A576039933F350371D4F4C9B /* UpdateManager.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		60DEFF04176A27DAD40F47B3 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				146FCCD95AF32978C93A4070 /* ColorTheme.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		6112CECFFB6140682F8F21E4 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				41C8268D40DD0D20994CFE5B /* Assets.xcassets */,
+				3D5A2F6D0F5957501EBBF1A6 /* DashDock.entitlements */,
+				E24A824173FC17013105F154 /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		707C3766892A9F5AE3DD9807 /* DashDock */ = {
+			isa = PBXGroup;
+			children = (
+				F5617F4CF0368A04B2643DDE /* Config.xcconfig */,
+			);
+			name = DashDock;
+			path = .;
+			sourceTree = "<group>";
+		};
+		798D118D2E5BA365C6FC38E0 /* WidgetViews */ = {
+			isa = PBXGroup;
+			children = (
+				C40045AAD533953034218842 /* RealtimeUsersView.swift */,
+			);
+			path = WidgetViews;
+			sourceTree = "<group>";
+		};
+		7D476F9F396875B583BF598E = {
+			isa = PBXGroup;
+			children = (
+				853CED3BDED93E2A92901930 /* DashDock */,
+				707C3766892A9F5AE3DD9807 /* DashDock */,
+				3EBE5EE49532B421ACAF7F36 /* DashDockShared */,
+				998250D6E0E6CC71670C287B /* DashDockWidgets */,
+				990DB745D9E234CDC426FC18 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		853CED3BDED93E2A92901930 /* DashDock */ = {
+			isa = PBXGroup;
+			children = (
+				39D0FF84631ABAD9DD8BA4F5 /* API */,
+				589016AA12B39948599F92B7 /* App */,
+				BC446758ABEFFBEDEE27ABD0 /* Auth */,
+				4B0384F2C2F0DACFB32ECC0B /* Data */,
+				60DEFF04176A27DAD40F47B3 /* Extensions */,
+				6112CECFFB6140682F8F21E4 /* Resources */,
+				B9BA33939F8CB9D64148D2CF /* Views */,
+			);
+			path = DashDock;
+			sourceTree = "<group>";
+		};
+		8E1446745744DD72BE4E857D /* MenuBar */ = {
+			isa = PBXGroup;
+			children = (
+				898F0F0FC6E8DF616365FF24 /* MenuBarLabel.swift */,
+				F55FDBBE3D4412C51E11E672 /* MenuBarPopover.swift */,
+			);
+			path = MenuBar;
+			sourceTree = "<group>";
+		};
+		990DB745D9E234CDC426FC18 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C85D57043851FB0660AD0FFA /* DashDock.app */,
+				B53C929656C90300B1124CA4 /* DashDockWidgets.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		998250D6E0E6CC71670C287B /* DashDockWidgets */ = {
+			isa = PBXGroup;
+			children = (
+				55A25CE91DD558396D91663D /* TimelineProviders */,
+				D77E24B7C583DB043964234D /* WidgetEntries */,
+				03F1795E38ADA13BA14A7CC9 /* Widgets */,
+				798D118D2E5BA365C6FC38E0 /* WidgetViews */,
+				3B86DE2A1AC2D87C663E91E9 /* DashDockWidgets.entitlements */,
+				E2A0FED751D15E7C1293CD2E /* DashDockWidgets.swift */,
+				282C5BE6BD42D5ACC4EB7292 /* Info.plist */,
+			);
+			path = DashDockWidgets;
+			sourceTree = "<group>";
+		};
+		9E12D81C63DC7E250ED7E66A /* GA4 */ = {
+			isa = PBXGroup;
+			children = (
+				D93029C85BA8C60DF6C1DF29 /* GA4Client.swift */,
+				52E2D34545E309A63AD22795 /* GA4Models.swift */,
+			);
+			path = GA4;
+			sourceTree = "<group>";
+		};
+		B9BA33939F8CB9D64148D2CF /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				8E1446745744DD72BE4E857D /* MenuBar */,
+				269DA7E0709824B778687B4D /* Settings */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		BC446758ABEFFBEDEE27ABD0 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				695860EDBAB2207C53FF0C73 /* GoogleAuthManager.swift */,
+				630CDFE2D492EE7828DB8289 /* KeychainHelper.swift */,
+				BD58C86DD5B736DF23D891BD /* TokenStore.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		D77E24B7C583DB043964234D /* WidgetEntries */ = {
+			isa = PBXGroup;
+			children = (
+				B9C02FBD12FC08F61FA491BD /* GA4Entry.swift */,
+			);
+			path = WidgetEntries;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AC11A2DB5742690E9F4C567E /* DashDock */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2B2456B0EB0EB17808BBAC07 /* Build configuration list for PBXNativeTarget "DashDock" */;
+			buildPhases = (
+				BD6455C9E30448F8A9F2998C /* Sources */,
+				59FFB7CDAA26C270F080EBA7 /* Resources */,
+				9FC4812A9537F2ABCA583A24 /* Frameworks */,
+				EF4B1694877687544728162E /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				411F1B2D15B6D29C50D73A6F /* PBXTargetDependency */,
+			);
+			name = DashDock;
+			packageProductDependencies = (
+				63C31AFFF7CCC9C31E57A1DE /* Sparkle */,
+			);
+			productName = DashDock;
+			productReference = C85D57043851FB0660AD0FFA /* DashDock.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D280B6C149EA86FDA917F266 /* DashDockWidgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E0A26FE33550533AA444E96A /* Build configuration list for PBXNativeTarget "DashDockWidgets" */;
+			buildPhases = (
+				10D918E16EDC45699A25E4D5 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DashDockWidgets;
+			packageProductDependencies = (
+			);
+			productName = DashDockWidgets;
+			productReference = B53C929656C90300B1124CA4 /* DashDockWidgets.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FCBB9BEDE45EA03501145627 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					AC11A2DB5742690E9F4C567E = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					D280B6C149EA86FDA917F266 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = DB15F9F12689DA46CB8D572C /* Build configuration list for PBXProject "DashDock" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 7D476F9F396875B583BF598E;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				ACD7EE68CD7AB4BB3804BAE8 /* XCRemoteSwiftPackageReference "Sparkle" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 990DB745D9E234CDC426FC18 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AC11A2DB5742690E9F4C567E /* DashDock */,
+				D280B6C149EA86FDA917F266 /* DashDockWidgets */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		59FFB7CDAA26C270F080EBA7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FBE31EFCCEC4A87ED1CBE1D8 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		10D918E16EDC45699A25E4D5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7F4AD8CC9760356321639E09 /* CacheModels.swift in Sources */,
+				761D6A7BA2476BDC3B2F005F /* DashDockWidgets.swift in Sources */,
+				72A66F12B0904C22B034FBAF /* GA4Entry.swift in Sources */,
+				912EF081755C98D464AE31F8 /* GA4TimelineProvider.swift in Sources */,
+				AA801B5A7C0013182AA5400A /* GoogleAccount.swift in Sources */,
+				E3214BFAE753EE82BCA913C5 /* NumberFormatting.swift in Sources */,
+				8675F5ADCA23B9E91087B1F4 /* RealtimeUsersView.swift in Sources */,
+				57A9C26E4273D24A753D1A91 /* RealtimeUsersWidget.swift in Sources */,
+				D5C8232A771C22457A7999A8 /* SharedDataStore.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BD6455C9E30448F8A9F2998C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8C3BEFE6068A5105B570931D /* APIClient.swift in Sources */,
+				2C47EFBE153469438FC914DA /* AppState.swift in Sources */,
+				644F04DFA15ACC3E3B1FCA53 /* CacheModels.swift in Sources */,
+				217864D715F2F05B9399503A /* ColorTheme.swift in Sources */,
+				A23F6794498A46D30415E873 /* DashDockApp.swift in Sources */,
+				8C7FE148AA99083185948F6C /* DataSyncManager.swift in Sources */,
+				4580845F3314BAA4D38D602B /* GA4Client.swift in Sources */,
+				83F7A5B90CD7EF014485F8EE /* GA4Models.swift in Sources */,
+				F2C1CF29A2E8218763468486 /* GoogleAccount.swift in Sources */,
+				3226D1BF6E3A5192508B87D8 /* GoogleAuthManager.swift in Sources */,
+				F14AE75852D657655EBE3CFB /* KeychainHelper.swift in Sources */,
+				9B29E7287E64CD6080CBE903 /* MenuBarLabel.swift in Sources */,
+				27A7E5CD8E04423D6F608518 /* MenuBarPopover.swift in Sources */,
+				A26CA92C7309A3ABC14710B9 /* NumberFormatting.swift in Sources */,
+				0B0F476EEE29B30D766BF58B /* RateLimiter.swift in Sources */,
+				38C0614CE67E3637CE647707 /* SettingsView.swift in Sources */,
+				307F0CA37DC75B50619EDDF4 /* SharedDataStore.swift in Sources */,
+				A4F7369B393D3DAE39D0A580 /* TokenStore.swift in Sources */,
+				A984B35DC62D7F162C4E9021 /* UpdateManager.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		411F1B2D15B6D29C50D73A6F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D280B6C149EA86FDA917F266 /* DashDockWidgets */;
+			targetProxy = FDB451261319C26963BDE1F3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0BC9B97508D7E929F5562008 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = DashDock/Resources/DashDock.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
+				INFOPLIST_FILE = DashDock/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bami.dashdock;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		1827A27C8BCA8B0F03C71570 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F5617F4CF0368A04B2643DDE /* Config.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		6A5BE8B8C38869A4F299E32E /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F5617F4CF0368A04B2643DDE /* Config.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+		8A4612273D0CAB0D29803BE6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = DashDockWidgets/DashDockWidgets.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = DashDockWidgets/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bami.dashdock.widgets;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		DED548FC996BB2887DFDB059 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = DashDock/Resources/DashDock.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
+				INFOPLIST_FILE = DashDock/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bami.dashdock;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		E7D730EF33994B2E745E20D4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = DashDockWidgets/DashDockWidgets.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = DashDockWidgets/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.bami.dashdock.widgets;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2B2456B0EB0EB17808BBAC07 /* Build configuration list for PBXNativeTarget "DashDock" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DED548FC996BB2887DFDB059 /* Debug */,
+				0BC9B97508D7E929F5562008 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		DB15F9F12689DA46CB8D572C /* Build configuration list for PBXProject "DashDock" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1827A27C8BCA8B0F03C71570 /* Debug */,
+				6A5BE8B8C38869A4F299E32E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		E0A26FE33550533AA444E96A /* Build configuration list for PBXNativeTarget "DashDockWidgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E7D730EF33994B2E745E20D4 /* Debug */,
+				8A4612273D0CAB0D29803BE6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		ACD7EE68CD7AB4BB3804BAE8 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = exactVersion;
+				version = 2.6.4;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		63C31AFFF7CCC9C31E57A1DE /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ACD7EE68CD7AB4BB3804BAE8 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = FCBB9BEDE45EA03501145627 /* Project object */;
+}
