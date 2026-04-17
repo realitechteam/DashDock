@@ -15,6 +15,8 @@ struct MenuBarPopover: View {
                 authenticatedContent
             }
         }
+        .animation(.easeInOut(duration: 0.3), value: needsSetup)
+        .animation(.easeInOut(duration: 0.3), value: authManager.isAuthenticated)
         .background(.regularMaterial)
         .task {
             // Auto-start sync on launch if already authenticated
@@ -69,31 +71,80 @@ struct MenuBarPopover: View {
 
     private var headerView: some View {
         HStack(spacing: 8) {
-            if let account = authManager.currentAccount {
-                VStack(alignment: .leading, spacing: 1) {
-                    Text(account.ga4PropertyName ?? "DashDock")
-                        .font(.headline)
-                        .lineLimit(1)
-                    Text(account.email)
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
+            // Account menu — click to switch accounts or edit properties
+            Menu {
+                // Current account info
+                if let account = authManager.currentAccount {
+                    Section(account.email) {
+                        if let prop = account.ga4PropertyName {
+                            Label("GA4: \(prop)", systemImage: "chart.bar")
+                        }
+                        if let adId = account.adSenseAccountID {
+                            Label("AdSense: \(adId)", systemImage: "dollarsign.circle")
+                        }
+                    }
                 }
-            }
-            Spacer()
 
-            if !appState.subscription.isPro {
-                Button {
-                    // TODO: Show upgrade sheet
-                } label: {
-                    Text("PRO")
-                        .font(.caption2.bold())
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 2)
-                        .background(.orange.gradient, in: Capsule())
-                        .foregroundStyle(.white)
+                Divider()
+
+                // Other accounts
+                let allAccounts = SharedDataStore.shared.loadAccounts()
+                let otherAccounts = allAccounts.filter { $0.id != authManager.currentAccount?.id }
+                if !otherAccounts.isEmpty {
+                    Section("Switch Account") {
+                        ForEach(otherAccounts) { acct in
+                            Button {
+                                switchToAccount(acct)
+                            } label: {
+                                Label(acct.email, systemImage: "person.circle")
+                            }
+                        }
+                    }
                 }
-                .buttonStyle(.borderless)
+
+                // Actions
+                Section {
+                    Button {
+                        authManager.signIn()
+                    } label: {
+                        Label("Add Google Account", systemImage: "person.badge.plus")
+                    }
+
+                    Button {
+                        appState.showSetup = true
+                    } label: {
+                        Label("Change Property", systemImage: "building.2")
+                    }
+                }
+
+                Divider()
+
+                Button(role: .destructive) {
+                    authManager.signOut()
+                } label: {
+                    Label("Sign Out", systemImage: "rectangle.portrait.and.arrow.forward")
+                }
+            } label: {
+                HStack(spacing: 6) {
+                    if let account = authManager.currentAccount {
+                        VStack(alignment: .leading, spacing: 1) {
+                            Text(account.ga4PropertyName ?? "DashDock")
+                                .font(.headline)
+                                .lineLimit(1)
+                            Text(account.email)
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    Image(systemName: "chevron.down")
+                        .font(.caption2)
+                        .foregroundStyle(.tertiary)
+                }
             }
+            .menuStyle(.borderlessButton)
+            .fixedSize()
+
+            Spacer()
 
             Button {
                 Task { await syncManager.refreshAll() }
@@ -111,6 +162,19 @@ struct MenuBarPopover: View {
         }
         .padding(.horizontal)
         .padding(.vertical, 10)
+    }
+
+    private func switchToAccount(_ account: GoogleAccount) {
+        SharedDataStore.shared.saveCurrentAccount(account)
+        authManager.currentAccount = account
+
+        // Check if this account has a property configured
+        if account.ga4PropertyID == nil {
+            appState.showSetup = true
+        } else {
+            appState.showSetup = false
+            startSync()
+        }
     }
 
     @ViewBuilder
@@ -237,128 +301,255 @@ struct PropertyPickerView: View {
     @State private var errorMsg: String?
     @State private var manualID = ""
     @State private var showManualInput = false
+    @State private var needsAdminAPI = false  // true when 403 = Admin API not enabled
+
+    @State private var isConnecting = false
+
+    /// Other accounts that already have a property configured (can switch back)
+    private var configuredAccounts: [GoogleAccount] {
+        SharedDataStore.shared.loadAccounts().filter {
+            $0.id != authManager.currentAccount?.id && $0.ga4PropertyID != nil
+        }
+    }
 
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 12) {
+            // Top bar with escape options
+            HStack {
+                if !configuredAccounts.isEmpty {
+                    Menu {
+                        ForEach(configuredAccounts) { acct in
+                            Button {
+                                switchToAccount(acct)
+                            } label: {
+                                Label(acct.email, systemImage: "person.circle")
+                            }
+                        }
+                    } label: {
+                        HStack(spacing: 4) {
+                            Image(systemName: "arrow.left")
+                            Text("Switch Account")
+                        }
+                        .font(.caption)
+                    }
+                    .menuStyle(.borderlessButton)
+                    .fixedSize()
+                }
+
+                Spacer()
+
+                Button(role: .destructive) {
+                    authManager.signOut()
+                } label: {
+                    Text("Sign Out")
+                        .font(.caption)
+                }
+                .buttonStyle(.borderless)
+            }
+            .padding(.horizontal)
+            .padding(.top, 8)
+
             Spacer()
 
             Image(systemName: "chart.xyaxis.line")
-                .font(.system(size: 36))
+                .font(.system(size: 32))
                 .foregroundStyle(.blue.gradient)
 
-            Text("Select Property")
+            Text("Connect GA4 Property")
                 .font(.title3.bold())
 
-            Text("Choose a GA4 property to monitor")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+            if let email = authManager.currentAccount?.email {
+                Text(email)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
 
+            // Content area
             if isLoading {
                 ProgressView("Loading properties...")
                     .padding()
-            } else if let errorMsg {
-                VStack(spacing: 8) {
-                    Text(errorMsg)
-                        .font(.caption)
-                        .foregroundStyle(.red)
-                        .multilineTextAlignment(.center)
-                    Button("Retry") { loadProperties() }
-                        .buttonStyle(.bordered)
-                }
-            } else if accounts.isEmpty && !showManualInput {
-                VStack(spacing: 8) {
-                    Text("No GA4 properties found.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Button("Enter Property ID manually") {
-                        showManualInput = true
-                    }
-                    .buttonStyle(.bordered)
-                }
-            } else if showManualInput {
-                manualInputView
-            } else {
+            } else if needsAdminAPI {
+                enableAdminAPIView
+            } else if !accounts.isEmpty && !showManualInput {
                 propertyListView
+            } else {
+                manualInputView
             }
 
             Spacer()
         }
-        .padding()
+        .padding(.bottom)
         .task { loadProperties() }
+    }
+
+    /// Shown when Analytics Admin API is not enabled — guide user to enable it
+    private var enableAdminAPIView: some View {
+        VStack(spacing: 14) {
+            VStack(spacing: 6) {
+                Image(systemName: "exclamationmark.shield")
+                    .font(.title2)
+                    .foregroundStyle(.orange)
+
+                Text("One more step")
+                    .font(.callout.bold())
+
+                Text("DashDock needs the **Analytics Admin API** to list your properties. Enable it in Google Cloud Console (takes 30 seconds).")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 16)
+            }
+
+            // Step-by-step
+            VStack(alignment: .leading, spacing: 8) {
+                StepRow(number: 1, text: "Click the button below to open Cloud Console")
+                StepRow(number: 2, text: "Click **\"Enable\"** on the API page")
+                StepRow(number: 3, text: "Come back here and tap **\"Done, load properties\"**")
+            }
+            .padding(.horizontal, 24)
+
+            Button {
+                let url = URL(string: "https://console.cloud.google.com/apis/library/analyticsadmin.googleapis.com")!
+                NSWorkspace.shared.open(url)
+            } label: {
+                HStack {
+                    Image(systemName: "safari")
+                    Text("Open Google Cloud Console")
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 4)
+            }
+            .buttonStyle(.borderedProminent)
+            .padding(.horizontal, 24)
+
+            Button {
+                needsAdminAPI = false
+                errorMsg = nil
+                loadProperties()
+            } label: {
+                HStack {
+                    Image(systemName: "arrow.clockwise")
+                    Text("Done, load properties")
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 4)
+            }
+            .buttonStyle(.bordered)
+            .padding(.horizontal, 24)
+
+            Button("Skip — enter Property ID manually") {
+                needsAdminAPI = false
+                showManualInput = true
+            }
+            .font(.caption)
+            .buttonStyle(.borderless)
+            .foregroundStyle(.secondary)
+        }
+    }
+
+    /// Simple manual input (no error context needed when user chose this path)
+    private var manualInputView: some View {
+        VStack(spacing: 12) {
+            if let errorMsg, !needsAdminAPI {
+                Text(friendlyError(errorMsg))
+                    .font(.caption2)
+                    .foregroundStyle(.orange)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+            }
+
+            VStack(alignment: .leading, spacing: 6) {
+                Text("GA4 Property ID")
+                    .font(.caption.bold())
+
+                TextField("e.g. 123456789", text: $manualID)
+                    .textFieldStyle(.roundedBorder)
+                    .onSubmit { connectManualID() }
+
+                Text("Find in: **analytics.google.com** → Admin → Property details → Property ID")
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
+            }
+            .padding(.horizontal, 24)
+
+            Button {
+                connectManualID()
+            } label: {
+                Text("Connect")
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 4)
+            }
+            .buttonStyle(.borderedProminent)
+            .disabled(manualID.trimmingCharacters(in: .whitespaces).isEmpty)
+            .padding(.horizontal, 24)
+
+            if !accounts.isEmpty {
+                Button("Back to property list") {
+                    showManualInput = false
+                }
+                .font(.caption)
+                .buttonStyle(.borderless)
+            }
+        }
     }
 
     private var propertyListView: some View {
         VStack(spacing: 12) {
-            ScrollView {
-                VStack(spacing: 4) {
-                    ForEach(accounts) { account in
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(account.displayName)
-                                .font(.caption.bold())
-                                .foregroundStyle(.secondary)
-                                .padding(.horizontal, 4)
+            if isConnecting {
+                VStack(spacing: 8) {
+                    ProgressView()
+                    Text("Connecting...")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                .padding()
+            } else {
+                Text("Tap a property to connect")
+                    .font(.caption)
+                    .foregroundStyle(.tertiary)
 
-                            ForEach(account.propertySummaries ?? []) { property in
-                                PropertyRow(
-                                    property: property,
-                                    isSelected: selectedProperty?.id == property.id
-                                ) {
-                                    selectedProperty = property
+                ScrollView {
+                    VStack(spacing: 4) {
+                        ForEach(accounts) { account in
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(account.displayName)
+                                    .font(.caption.bold())
+                                    .foregroundStyle(.secondary)
+                                    .padding(.horizontal, 4)
+
+                                ForEach(account.propertySummaries ?? []) { property in
+                                    Button {
+                                        connectProperty(property)
+                                    } label: {
+                                        HStack {
+                                            VStack(alignment: .leading, spacing: 2) {
+                                                Text(property.displayName)
+                                                    .font(.callout)
+                                                Text("ID: \(property.propertyID)")
+                                                    .font(.caption2)
+                                                    .foregroundStyle(.tertiary)
+                                            }
+                                            Spacer()
+                                            Image(systemName: "arrow.right.circle")
+                                                .foregroundStyle(.secondary)
+                                        }
+                                        .padding(.horizontal, 10)
+                                        .padding(.vertical, 8)
+                                        .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 8))
+                                    }
+                                    .buttonStyle(.plain)
                                 }
                             }
                         }
                     }
                 }
-            }
-            .frame(maxHeight: 200)
+                .frame(maxHeight: 200)
 
-            HStack {
-                Button("Enter manually") {
+                Button("Enter manually instead") {
                     showManualInput = true
                 }
-                .buttonStyle(.borderless)
                 .font(.caption)
-
-                Spacer()
-
-                Button("Connect") {
-                    guard let prop = selectedProperty else { return }
-                    saveProperty(id: prop.propertyID, name: prop.displayName)
-                }
-                .buttonStyle(.borderedProminent)
-                .disabled(selectedProperty == nil)
-            }
-        }
-    }
-
-    private var manualInputView: some View {
-        VStack(spacing: 12) {
-            VStack(alignment: .leading, spacing: 4) {
-                Text("GA4 Property ID")
-                    .font(.caption.bold())
-                TextField("e.g. 123456789", text: $manualID)
-                    .textFieldStyle(.roundedBorder)
-                Text("Find it: Google Analytics → Admin → Property details")
-                    .font(.caption2)
-                    .foregroundStyle(.tertiary)
-            }
-
-            HStack {
-                Button("Back to list") {
-                    showManualInput = false
-                }
                 .buttonStyle(.borderless)
-                .font(.caption)
-
-                Spacer()
-
-                Button("Connect") {
-                    let trimmed = manualID.trimmingCharacters(in: .whitespaces)
-                    guard !trimmed.isEmpty else { return }
-                    saveProperty(id: trimmed, name: "Property \(trimmed)")
-                }
-                .buttonStyle(.borderedProminent)
-                .disabled(manualID.trimmingCharacters(in: .whitespaces).isEmpty)
             }
         }
     }
@@ -366,6 +557,7 @@ struct PropertyPickerView: View {
     private func loadProperties() {
         isLoading = true
         errorMsg = nil
+        needsAdminAPI = false
         Task {
             let apiClient = APIClient(authManager: authManager)
             let ga4 = GA4Client(apiClient: apiClient)
@@ -375,9 +567,39 @@ struct PropertyPickerView: View {
                     showManualInput = true
                 }
             } catch {
-                errorMsg = "Failed to load properties: \(error.localizedDescription)"
+                let msg = error.localizedDescription
+                errorMsg = msg
+                // Detect Admin API not enabled
+                if msg.contains("Admin API") || msg.contains("not been used") ||
+                   msg.contains("not been enabled") || msg.contains("not enabled") ||
+                   msg.contains("403") || msg.contains("Access denied") {
+                    needsAdminAPI = true
+                } else {
+                    showManualInput = true
+                }
             }
             isLoading = false
+        }
+    }
+
+    private func connectProperty(_ property: GA4PropertySummary) {
+        isConnecting = true
+        // Brief delay for visual feedback, then save + transition
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+            withAnimation(.easeInOut(duration: 0.3)) {
+                saveProperty(id: property.propertyID, name: property.displayName)
+            }
+        }
+    }
+
+    private func connectManualID() {
+        let trimmed = manualID.trimmingCharacters(in: .whitespaces)
+        guard !trimmed.isEmpty else { return }
+        isConnecting = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+            withAnimation(.easeInOut(duration: 0.3)) {
+                saveProperty(id: trimmed, name: "Property \(trimmed)")
+            }
         }
     }
 
@@ -396,6 +618,45 @@ struct PropertyPickerView: View {
 
         appState.showSetup = false
         onComplete()
+    }
+
+    private func switchToAccount(_ account: GoogleAccount) {
+        SharedDataStore.shared.saveCurrentAccount(account)
+        authManager.currentAccount = account
+        appState.showSetup = false
+        onComplete()
+    }
+
+    /// Shorten Google's verbose error messages
+    private func friendlyError(_ msg: String) -> String {
+        if msg.contains("Admin API has not been used") || msg.contains("not been enabled") {
+            return "Google Analytics Admin API not enabled. Enter Property ID manually below."
+        }
+        if msg.contains("403") || msg.contains("Access denied") {
+            return "No permission to list properties. Enter Property ID manually below."
+        }
+        if msg.contains("401") || msg.contains("unauthorized") {
+            return "Session expired. Try signing out and back in."
+        }
+        return msg
+    }
+}
+
+private struct StepRow: View {
+    let number: Int
+    let text: LocalizedStringKey
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 8) {
+            Text("\(number)")
+                .font(.caption2.bold())
+                .frame(width: 18, height: 18)
+                .background(Color.accentColor.opacity(0.15))
+                .clipShape(Circle())
+            Text(text)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
     }
 }
 

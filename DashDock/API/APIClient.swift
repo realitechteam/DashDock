@@ -16,7 +16,7 @@ final class APIClient {
         var request = URLRequest(url: url)
         try await authorize(&request)
         let (data, response) = try await session.data(for: request)
-        try checkResponse(response)
+        try checkResponse(response, data: data)
         return try decoder.decode(T.self, from: data)
     }
 
@@ -27,7 +27,7 @@ final class APIClient {
         request.httpBody = try JSONEncoder().encode(body)
         try await authorize(&request)
         let (data, response) = try await session.data(for: request)
-        try checkResponse(response)
+        try checkResponse(response, data: data)
         return try decoder.decode(T.self, from: data)
     }
 
@@ -38,7 +38,7 @@ final class APIClient {
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
     }
 
-    private func checkResponse(_ response: URLResponse) throws {
+    private func checkResponse(_ response: URLResponse, data: Data) throws {
         guard let http = response as? HTTPURLResponse else {
             throw APIError.invalidResponse
         }
@@ -47,21 +47,42 @@ final class APIClient {
             return
         case 401:
             throw APIError.unauthorized
+        case 403:
+            let detail = parseGoogleError(data)
+            throw APIError.forbidden(detail: detail)
         case 429:
             let retryAfter = http.value(forHTTPHeaderField: "Retry-After")
                 .flatMap(Int.init) ?? 60
             throw APIError.rateLimited(retryAfterSeconds: retryAfter)
         default:
-            throw APIError.httpError(statusCode: http.statusCode)
+            let detail = parseGoogleError(data)
+            throw APIError.httpError(statusCode: http.statusCode, detail: detail)
         }
+    }
+
+    /// Parse Google API error response: {"error": {"message": "...", "status": "..."}}
+    private func parseGoogleError(_ data: Data) -> String {
+        struct GoogleError: Decodable {
+            struct Inner: Decodable {
+                let message: String?
+                let status: String?
+            }
+            let error: Inner?
+        }
+        if let parsed = try? JSONDecoder().decode(GoogleError.self, from: data),
+           let msg = parsed.error?.message {
+            return msg
+        }
+        return String(data: data, encoding: .utf8)?.prefix(200).description ?? "Unknown error"
     }
 }
 
 enum APIError: LocalizedError {
     case unauthorized
     case invalidResponse
+    case forbidden(detail: String)
     case rateLimited(retryAfterSeconds: Int)
-    case httpError(statusCode: Int)
+    case httpError(statusCode: Int, detail: String)
 
     var errorDescription: String? {
         switch self {
@@ -69,10 +90,12 @@ enum APIError: LocalizedError {
             return "Authentication required. Please sign in again."
         case .invalidResponse:
             return "Invalid response from server."
+        case .forbidden(let detail):
+            return "Access denied: \(detail)"
         case .rateLimited(let seconds):
             return "Rate limited. Try again in \(seconds) seconds."
-        case .httpError(let code):
-            return "HTTP error \(code)."
+        case .httpError(let code, let detail):
+            return "HTTP \(code): \(detail)"
         }
     }
 }

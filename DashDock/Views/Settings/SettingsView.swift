@@ -99,6 +99,7 @@ struct PropertiesSettingsView: View {
     @State private var isLoading = false
     @State private var manualID = ""
     @State private var showManual = false
+    @State private var errorMsg: String?
 
     var body: some View {
         Form {
@@ -109,6 +110,42 @@ struct PropertiesSettingsView: View {
                             .scaleEffect(0.7)
                         Text("Loading properties...")
                             .font(.caption)
+                    }
+                } else if let errorMsg {
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack(spacing: 6) {
+                            Image(systemName: "exclamationmark.triangle.fill")
+                                .foregroundStyle(.yellow)
+                            Text("Failed to load properties")
+                                .font(.callout.bold())
+                        }
+
+                        Text(errorMsg)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .textSelection(.enabled)
+
+                        if errorMsg.contains("not been used") || errorMsg.contains("not been enabled") || errorMsg.contains("not enabled") {
+                            Text("Enable the **Google Analytics Admin API** in Google Cloud Console, then retry.")
+                                .font(.caption)
+                                .foregroundStyle(.orange)
+                        }
+
+                        HStack {
+                            Button("Retry") {
+                                self.errorMsg = nil
+                                Task { await loadProperties() }
+                            }
+                            .buttonStyle(.bordered)
+                            .controlSize(.small)
+
+                            Button("Enter ID manually") {
+                                self.errorMsg = nil
+                                showManual = true
+                            }
+                            .buttonStyle(.bordered)
+                            .controlSize(.small)
+                        }
                     }
                 } else if showManual {
                     manualSection
@@ -196,12 +233,16 @@ struct PropertiesSettingsView: View {
     private func loadProperties() async {
         guard authManager.isAuthenticated else { return }
         isLoading = true
+        errorMsg = nil
         let apiClient = APIClient(authManager: authManager)
         let ga4 = GA4Client(apiClient: apiClient)
         do {
             accounts = try await ga4.listAccountSummaries()
+            if accounts.isEmpty || accounts.flatMap({ $0.propertySummaries ?? [] }).isEmpty {
+                showManual = true
+            }
         } catch {
-            showManual = true
+            errorMsg = error.localizedDescription
         }
         isLoading = false
     }
@@ -366,12 +407,33 @@ struct AdSenseAccountSection: View {
                         .font(.caption)
                 }
             } else if let errorMsg {
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: 6) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .foregroundStyle(.yellow)
+                            .font(.caption)
+                        Text("Failed to load AdSense")
+                            .font(.caption.bold())
+                    }
+
                     Text(errorMsg)
                         .font(.caption)
-                        .foregroundStyle(.red)
+                        .foregroundStyle(.secondary)
+                        .textSelection(.enabled)
+
+                    if errorMsg.contains("not been used") || errorMsg.contains("not been enabled") || errorMsg.contains("not enabled") {
+                        Text("Enable the **AdSense Management API** in Google Cloud Console, then retry.")
+                            .font(.caption)
+                            .foregroundStyle(.orange)
+                    } else if errorMsg.contains("Access denied") || errorMsg.contains("403") {
+                        Text("Make sure this Google account has an active AdSense account, and the AdSense Management API is enabled.")
+                            .font(.caption)
+                            .foregroundStyle(.orange)
+                    }
+
                     Button("Retry") { loadAccounts() }
-                        .font(.caption)
+                        .buttonStyle(.bordered)
+                        .controlSize(.small)
                 }
             } else if adSenseAccounts.isEmpty {
                 VStack(alignment: .leading, spacing: 4) {
