@@ -27,6 +27,11 @@ struct SettingsView: View {
                     Label("Updates", systemImage: "arrow.down.circle")
                 }
 
+            BillingSettingsView()
+                .tabItem {
+                    Label("Billing", systemImage: "creditcard")
+                }
+
             AboutSettingsView()
                 .tabItem {
                     Label("About", systemImage: "info.circle")
@@ -522,6 +527,98 @@ struct AdSenseAccountSection: View {
         let apiClient = APIClient(authManager: authManager)
         syncManager.configure(apiClient: apiClient)
         syncManager.startPolling()
+    }
+}
+
+// MARK: - Billing
+
+struct BillingSettingsView: View {
+    @State private var subscription = SubscriptionManager.shared
+    @State private var licenseInput = ""
+
+    var body: some View {
+        Form {
+            Section("Plan") {
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(subscription.isPro ? "DashDock Pro" : "DashDock Free")
+                            .font(.headline)
+                        if let displayKey = subscription.licenseDisplayKey {
+                            Text("License: \(displayKey)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        if let expires = subscription.licenseExpiresAt {
+                            Text("Expires: \(expires.formatted(date: .abbreviated, time: .omitted))")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        if let validated = subscription.lastValidatedAt {
+                            Text("Last validated: \(validated.formatted(date: .abbreviated, time: .shortened))")
+                                .font(.caption2)
+                                .foregroundStyle(.tertiary)
+                        }
+                    }
+                    Spacer()
+                    if !subscription.isPro {
+                        Button("Upgrade") {
+                            subscription.openCheckout()
+                        }
+                        .buttonStyle(.borderedProminent)
+                    }
+                }
+            }
+
+            Section("Activate License") {
+                TextField("Enter Polar license key", text: $licenseInput)
+                    .textFieldStyle(.roundedBorder)
+
+                HStack {
+                    Button("Activate") {
+                        Task { await subscription.activateLicense(licenseInput) }
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .disabled(licenseInput.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || subscription.isWorking)
+
+                    Button("Validate") {
+                        Task { await subscription.validateCurrentLicense() }
+                    }
+                    .disabled(subscription.isWorking)
+
+                    Spacer()
+
+                    if subscription.hasStoredLicense {
+                        Button("Clear License", role: .destructive) {
+                            subscription.clearLicense()
+                            licenseInput = ""
+                        }
+                    }
+                }
+
+                if subscription.isWorking {
+                    HStack(spacing: 8) {
+                        ProgressView().scaleEffect(0.7)
+                        Text("Checking Polar license...")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+
+                if let error = subscription.billingError {
+                    Text(error)
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                }
+            }
+
+            Section {
+                Text("Checkout opens in browser via Polar. After purchase, copy your license key here to activate Pro on this Mac.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .formStyle(.grouped)
+        .padding()
     }
 }
 

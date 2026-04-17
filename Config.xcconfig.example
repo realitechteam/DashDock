@@ -9,3 +9,8 @@ GOOGLE_CLIENT_SECRET = YOUR_CLIENT_SECRET_HERE
 
 // Sparkle EdDSA public key — Generate with: ./scripts/release.sh generate-keys
 SPARKLE_ED_PUBLIC_KEY = YOUR_PUBLIC_KEY_HERE
+
+// Polar billing
+POLAR_CHECKOUT_URL = https://polar.sh/checkout/YOUR_CHECKOUT_ID
+POLAR_ORGANIZATION_ID = YOUR_ORGANIZATION_ID
+POLAR_BENEFIT_ID = YOUR_BENEFIT_ID

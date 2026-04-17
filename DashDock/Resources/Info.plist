@@ -22,6 +22,12 @@
 	<string>$(GOOGLE_CLIENT_ID)</string>
 	<key>GOOGLE_CLIENT_SECRET</key>
 	<string>$(GOOGLE_CLIENT_SECRET)</string>
+	<key>POLAR_BENEFIT_ID</key>
+	<string>$(POLAR_BENEFIT_ID)</string>
+	<key>POLAR_CHECKOUT_URL</key>
+	<string>$(POLAR_CHECKOUT_URL)</string>
+	<key>POLAR_ORGANIZATION_ID</key>
+	<string>$(POLAR_ORGANIZATION_ID)</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>LSUIElement</key>
