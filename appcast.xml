@@ -10,6 +10,27 @@
         <!-- Latest version should be the FIRST item -->
 
         <item>
+            <title>Version 1.1.1</title>
+            <sparkle:version>5</sparkle:version>
+            <sparkle:shortVersionString>1.1.1</sparkle:shortVersionString>
+            <description><![CDATA[
+                <h2>DashDock v1.1.1</h2>
+                <ul>
+                    <li>Multi-account switching in menu bar popover</li>
+                    <li>Improved Google API error messages in setup and settings</li>
+                    <li>Property picker flow polish and recovery options</li>
+                    <li>Release pipeline fixes for Sparkle signature generation</li>
+                </ul>
+            ]]></description>
+            <pubDate>Fri, 17 Apr 2026 22:43:18 +0700</pubDate>
+            <enclosure
+                url="https://realitech.dev/dashdock/releases/DashDock-v1.1.1.dmg"
+                sparkle:edSignature="DC/p0Q4sG3HL2p9hS3Ha4etJlV5M4XOSoDMfnXb2jqzELBfm+9bRT5m7WdYQQVg16exrMNPtQa8GFqlfw8f0Ag=="
+                length="1805377"
+                type="application/octet-stream" />
+        </item>
+
+        <item>
             <title>Version 1.0.0</title>
             <sparkle:version>1</sparkle:version>
             <sparkle:shortVersionString>1.0.0</sparkle:shortVersionString>

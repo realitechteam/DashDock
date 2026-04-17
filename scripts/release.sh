@@ -98,7 +98,12 @@ build_release() {
     find_sparkle_tools
     echo ""
     echo "Signing DMG with EdDSA..."
-    local SIGNATURE=$("$SPARKLE_BIN/sign_update" "$DMG_PATH" 2>&1)
+    local SIGN_OUTPUT=$("$SPARKLE_BIN/sign_update" "$DMG_PATH" 2>&1)
+    local SIGNATURE=$(echo "$SIGN_OUTPUT" | sed -n 's/.*\(sparkle:edSignature="[^"]*"\).*/\1/p')
+    if [ -z "$SIGNATURE" ]; then
+        echo "Failed to parse Sparkle signature output: $SIGN_OUTPUT"
+        exit 1
+    fi
     echo "Signature: $SIGNATURE"
 
     local DMG_SIZE=$(stat -f%z "$DMG_PATH")
