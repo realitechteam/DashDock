@@ -1,6 +1,7 @@
 import AppKit
 import Security
 import SwiftUI
+import WidgetKit
 
 @Observable
 @MainActor
@@ -14,11 +15,6 @@ final class AppState {
         case adsense = "AdSense"
         case searchConsole = "Search Console"
     }
-}
-
-enum AppTier: String, Codable {
-    case free
-    case pro
 }
 
 @Observable
@@ -271,10 +267,13 @@ final class SubscriptionManager {
         {
             currentTier = tier
         }
+        SharedDataStore.shared.saveAppTier(currentTier)
     }
 
     private func saveTier() {
         defaults.set(currentTier.rawValue, forKey: tierKey)
+        SharedDataStore.shared.saveAppTier(currentTier)
+        WidgetCenter.shared.reloadAllTimelines()
     }
 
     private func loadLicenseMetadata() {

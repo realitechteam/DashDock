@@ -56,7 +56,7 @@ struct AdSenseCard: View {
                 AdSenseMiniMetric(label: "Yesterday", value: data.yesterdayEarnings.currencyFormatted)
                 AdSenseMiniMetric(label: "7 Days", value: data.last7DaysEarnings.currencyFormatted)
                 AdSenseMiniMetric(label: "30 Days", value: data.last30DaysEarnings.currencyFormatted)
-                AdSenseMiniMetric(label: "RPM", value: String(format: "$%.2f", data.todayPageviewsRPM))
+                AdSenseMiniMetric(label: "RPM", value: data.todayPageviewsRPM.currencyFormatted)
             }
 
             // Clicks and impressions row
@@ -89,7 +89,7 @@ struct AdSenseCard: View {
                     Text("CPC")
                         .font(.caption2)
                         .foregroundStyle(.tertiary)
-                    Text(String(format: "$%.2f", data.todayCPC))
+                    Text(data.todayCPC.currencyFormatted)
                         .font(.caption.bold().monospacedDigit())
                 }
             }

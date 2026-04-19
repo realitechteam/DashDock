@@ -17,7 +17,18 @@ extension Int {
 
 extension Double {
     var currencyFormatted: String {
-        String(format: "$%.2f", self)
+        let code = SharedDataStore.shared.loadPreferredCurrency()
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.currencyCode = code
+        if code == "VND" {
+            formatter.maximumFractionDigits = 0
+            formatter.minimumFractionDigits = 0
+        } else {
+            formatter.maximumFractionDigits = 2
+            formatter.minimumFractionDigits = 2
+        }
+        return formatter.string(from: NSNumber(value: self)) ?? String(format: "%.2f", self)
     }
 
     var percentFormatted: String {

@@ -21,6 +21,10 @@ final class DataSyncManager {
     var reportInterval: TimeInterval = 300
     var adSenseInterval: TimeInterval = 300  // 5 minutes
 
+    private var shouldShowAds: Bool {
+        SubscriptionManager.shared.currentTier == .free
+    }
+
     func configure(apiClient: APIClient) {
         self.ga4Client = GA4Client(apiClient: apiClient)
         self.adSenseClient = AdSenseClient(apiClient: apiClient)
@@ -31,6 +35,10 @@ final class DataSyncManager {
 
     func startPolling() {
         stopPolling()
+
+        if !shouldShowAds {
+            adSenseRevenue = nil
+        }
 
         realtimeTimer = Timer.scheduledTimer(withTimeInterval: realtimeInterval, repeats: true) { [weak self] _ in
             Task { @MainActor [weak self] in
@@ -44,9 +52,11 @@ final class DataSyncManager {
             }
         }
 
-        adSenseTimer = Timer.scheduledTimer(withTimeInterval: adSenseInterval, repeats: true) { [weak self] _ in
-            Task { @MainActor [weak self] in
-                await self?.fetchAdSense()
+        if shouldShowAds {
+            adSenseTimer = Timer.scheduledTimer(withTimeInterval: adSenseInterval, repeats: true) { [weak self] _ in
+                Task { @MainActor [weak self] in
+                    await self?.fetchAdSense()
+                }
             }
         }
 
@@ -54,7 +64,9 @@ final class DataSyncManager {
         Task {
             await fetchRealtime()
             await fetchReports()
-            await fetchAdSense()
+            if shouldShowAds {
+                await fetchAdSense()
+            }
         }
     }
 
@@ -72,7 +84,9 @@ final class DataSyncManager {
     func refreshAll() async {
         await fetchRealtime()
         await fetchReports()
-        await fetchAdSense()
+        if shouldShowAds {
+            await fetchAdSense()
+        }
     }
 
     // MARK: - Fetch GA4

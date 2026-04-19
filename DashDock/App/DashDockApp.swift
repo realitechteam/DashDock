@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 
 @main
@@ -31,7 +32,6 @@ struct DashDockApp: App {
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
-        // Prevent macOS from auto-terminating the menu bar app
         ProcessInfo.processInfo.disableSuddenTermination()
         ProcessInfo.processInfo.disableAutomaticTermination("Menu bar app must stay running")
     }

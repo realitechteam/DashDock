@@ -1,6 +1,13 @@
 import SwiftUI
 import WidgetKit
 
+private let availableFamilies: [WidgetFamily] = {
+    if WidgetTier.current() == .pro {
+        return [.systemSmall, .systemMedium]
+    }
+    return [.systemSmall]
+}()
+
 struct RealtimeUsersWidget: Widget {
     let kind = "RealtimeUsersWidget"
 
@@ -11,6 +18,6 @@ struct RealtimeUsersWidget: Widget {
         }
         .configurationDisplayName("Realtime Users")
         .description("Shows the current number of active users on your site.")
-        .supportedFamilies([.systemSmall, .systemMedium])
+        .supportedFamilies(availableFamilies)
     }
 }

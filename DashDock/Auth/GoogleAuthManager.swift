@@ -156,6 +156,7 @@ final class GoogleAuthManager {
 
     private func handleConnection(_ connection: NWConnection, codeVerifier: String) {
         connection.start(queue: .global(qos: .userInitiated))
+        let redirectURI = "http://127.0.0.1:\(httpListener?.port?.rawValue ?? 0)"
 
         connection.receive(minimumIncompleteLength: 1, maximumLength: 8192) { [weak self] data, _, _, _ in
             guard let self, let data,
@@ -193,10 +194,6 @@ final class GoogleAuthManager {
                 isError: false
             )
             self.sendHTTPResponse(connection: connection, html: successHTML)
-
-            // Get the port used for redirect URI
-            let port = self.httpListener?.port?.rawValue ?? 0
-            let redirectURI = "http://127.0.0.1:\(port)"
 
             // Exchange code for tokens
             Task { @MainActor in

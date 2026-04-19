@@ -13,6 +13,10 @@ final class SharedDataStore {
     private let searchConsoleKey = "search_console"
     private let currentAccountKey = "current_account"
     private let accountsKey = "accounts"
+    private let appTierKey = "app_tier"
+    private let preferredCurrencyKey = "preferred_currency"
+
+    private let sharedStateURL: URL
 
     init() {
         // Use standard UserDefaults for sideload; switch to App Group for App Store
@@ -22,6 +26,7 @@ final class SharedDataStore {
         let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
         let sharedDir = appSupport.appendingPathComponent("DashDock", isDirectory: true)
         try? FileManager.default.createDirectory(at: sharedDir, withIntermediateDirectories: true)
+        sharedStateURL = sharedDir.appendingPathComponent("shared_state.json")
     }
 
     // MARK: - GA4 Realtime
@@ -82,6 +87,36 @@ final class SharedDataStore {
         load([GoogleAccount].self, forKey: accountsKey) ?? []
     }
 
+    func saveAppTier(_ tier: AppTier) {
+        defaults.set(tier.rawValue, forKey: appTierKey)
+        saveSharedState()
+    }
+
+    func loadAppTier() -> AppTier {
+        if let raw = defaults.string(forKey: appTierKey), let tier = AppTier(rawValue: raw) {
+            return tier
+        }
+        if let shared = loadSharedState()?.appTier, let tier = AppTier(rawValue: shared) {
+            return tier
+        }
+        return .free
+    }
+
+    func savePreferredCurrency(_ currencyCode: String) {
+        defaults.set(currencyCode, forKey: preferredCurrencyKey)
+        saveSharedState()
+    }
+
+    func loadPreferredCurrency() -> String {
+        if let code = defaults.string(forKey: preferredCurrencyKey), !code.isEmpty {
+            return code
+        }
+        if let code = loadSharedState()?.currencyCode, !code.isEmpty {
+            return code
+        }
+        return "VND"
+    }
+
     // MARK: - Helpers
 
     private func save<T: Encodable>(_ value: T, forKey key: String) {
@@ -95,8 +130,28 @@ final class SharedDataStore {
     }
 
     func clearAll() {
-        [ga4RealtimeKey, ga4SummaryKey, adSenseRevenueKey, searchConsoleKey, currentAccountKey, accountsKey].forEach {
+        [ga4RealtimeKey, ga4SummaryKey, adSenseRevenueKey, searchConsoleKey, currentAccountKey, accountsKey, appTierKey, preferredCurrencyKey].forEach {
             defaults.removeObject(forKey: $0)
         }
+        try? FileManager.default.removeItem(at: sharedStateURL)
     }
+
+    private func saveSharedState() {
+        let state = SharedState(
+            appTier: defaults.string(forKey: appTierKey),
+            currencyCode: defaults.string(forKey: preferredCurrencyKey)
+        )
+        guard let data = try? encoder.encode(state) else { return }
+        try? data.write(to: sharedStateURL, options: .atomic)
+    }
+
+    private func loadSharedState() -> SharedState? {
+        guard let data = try? Data(contentsOf: sharedStateURL) else { return nil }
+        return try? decoder.decode(SharedState.self, from: data)
+    }
+}
+
+private struct SharedState: Codable {
+    let appTier: String?
+    let currencyCode: String?
 }

@@ -155,10 +155,26 @@ struct MenuBarPopover: View {
             }
             .buttonStyle(.borderless)
 
-            SettingsLink {
+            Menu {
+                SettingsLink { Text("Settings") }
+                    .keyboardShortcut(",", modifiers: .command)
+
+                Button("Hide DashDock") {
+                    NSApplication.shared.hide(nil)
+                }
+                .keyboardShortcut("h", modifiers: .command)
+
+                Divider()
+
+                Button("Exit DashDock", role: .destructive) {
+                    NSApplication.shared.terminate(nil)
+                }
+                .keyboardShortcut("q", modifiers: .command)
+            } label: {
                 Image(systemName: "gear")
             }
-            .buttonStyle(.borderless)
+            .menuStyle(.borderlessButton)
+            .fixedSize()
         }
         .padding(.horizontal)
         .padding(.vertical, 10)
@@ -205,7 +221,8 @@ struct MenuBarPopover: View {
         }
 
         // AdSense Revenue
-        if let adsense = syncManager.adSenseRevenue {
+        if SubscriptionManager.shared.currentTier == .free,
+           let adsense = syncManager.adSenseRevenue {
             AdSenseCard(data: adsense)
         }
 

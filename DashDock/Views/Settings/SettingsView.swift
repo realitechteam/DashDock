@@ -105,10 +105,21 @@ struct PropertiesSettingsView: View {
     @State private var manualID = ""
     @State private var showManual = false
     @State private var errorMsg: String?
+    @State private var didInitialLoad = false
+
+    private static var cachedAccountID: String?
+    private static var cachedAccounts: [GA4AccountSummary] = []
+    private static var cachedAt: Date?
 
     var body: some View {
         Form {
             Section("Google Analytics 4") {
+                if let cachedAt = Self.cachedAt {
+                    Text("Updated \(cachedAt.formatted(.relative(presentation: .named)))")
+                        .font(.caption2)
+                        .foregroundStyle(.tertiary)
+                }
+
                 if isLoading {
                     HStack {
                         ProgressView()
@@ -139,7 +150,7 @@ struct PropertiesSettingsView: View {
                         HStack {
                             Button("Retry") {
                                 self.errorMsg = nil
-                                Task { await loadProperties() }
+                                Task { await loadProperties(force: true) }
                             }
                             .buttonStyle(.bordered)
                             .controlSize(.small)
@@ -173,7 +184,7 @@ struct PropertiesSettingsView: View {
         }
         .formStyle(.grouped)
         .padding()
-        .task { await loadProperties() }
+        .task { await loadPropertiesIfNeeded() }
     }
 
     private var propertyPickerSection: some View {
@@ -235,20 +246,52 @@ struct PropertiesSettingsView: View {
         }
     }
 
-    private func loadProperties() async {
+    private func loadPropertiesIfNeeded() async {
         guard authManager.isAuthenticated else { return }
+
+        let accountID = authManager.currentAccount?.id
+        if didInitialLoad, accountID == Self.cachedAccountID {
+            return
+        }
+
+        if accountID == Self.cachedAccountID, !Self.cachedAccounts.isEmpty {
+            accounts = Self.cachedAccounts
+            showManual = accounts.flatMap({ $0.propertySummaries ?? [] }).isEmpty
+            didInitialLoad = true
+            return
+        }
+
+        await loadProperties(force: false)
+    }
+
+    private func loadProperties(force: Bool) async {
+        guard authManager.isAuthenticated else { return }
+
+        let accountID = authManager.currentAccount?.id
+        if !force,
+           didInitialLoad,
+           accountID == Self.cachedAccountID,
+           !accounts.isEmpty {
+            return
+        }
+
         isLoading = true
         errorMsg = nil
         let apiClient = APIClient(authManager: authManager)
         let ga4 = GA4Client(apiClient: apiClient)
+
         do {
-            accounts = try await ga4.listAccountSummaries()
-            if accounts.isEmpty || accounts.flatMap({ $0.propertySummaries ?? [] }).isEmpty {
-                showManual = true
-            }
+            let fetched = try await ga4.listAccountSummaries()
+            accounts = fetched
+            Self.cachedAccounts = fetched
+            Self.cachedAccountID = accountID
+            Self.cachedAt = Date()
+            showManual = fetched.isEmpty || fetched.flatMap({ $0.propertySummaries ?? [] }).isEmpty
+            didInitialLoad = true
         } catch {
             errorMsg = error.localizedDescription
         }
+
         isLoading = false
     }
 
@@ -402,9 +445,21 @@ struct AdSenseAccountSection: View {
     @State private var adSenseAccounts: [AdSenseAccount] = []
     @State private var isLoading = false
     @State private var errorMsg: String?
+    @State private var didInitialLoad = false
+
+    private static var cachedAccountID: String?
+    private static var cachedAdSenseAccounts: [AdSenseAccount] = []
+    private static var cachedAt: Date?
 
     var body: some View {
         Group {
+            if let cachedAt = Self.cachedAt,
+               authManager.currentAccount?.id == Self.cachedAccountID {
+                Text("Updated \(cachedAt.formatted(.relative(presentation: .named)))")
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
+            }
+
             if isLoading {
                 HStack {
                     ProgressView().scaleEffect(0.7)
@@ -436,7 +491,7 @@ struct AdSenseAccountSection: View {
                             .foregroundStyle(.orange)
                     }
 
-                    Button("Retry") { loadAccounts() }
+                    Button("Retry") { loadAccounts(force: true) }
                         .buttonStyle(.bordered)
                         .controlSize(.small)
                 }
@@ -445,7 +500,7 @@ struct AdSenseAccountSection: View {
                     Text("No AdSense accounts found")
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                    Button("Reload") { loadAccounts() }
+                    Button("Reload") { loadAccounts(force: true) }
                         .font(.caption)
                 }
             } else {
@@ -480,18 +535,49 @@ struct AdSenseAccountSection: View {
                 }
             }
         }
-        .task { loadAccounts() }
+        .task { loadAccountsIfNeeded() }
     }
 
-    private func loadAccounts() {
+    private func loadAccountsIfNeeded() {
         guard authManager.isAuthenticated else { return }
+
+        let accountID = authManager.currentAccount?.id
+        if didInitialLoad, accountID == Self.cachedAccountID {
+            return
+        }
+
+        if accountID == Self.cachedAccountID, !Self.cachedAdSenseAccounts.isEmpty {
+            adSenseAccounts = Self.cachedAdSenseAccounts
+            didInitialLoad = true
+            return
+        }
+
+        loadAccounts(force: false)
+    }
+
+    private func loadAccounts(force: Bool) {
+        guard authManager.isAuthenticated else { return }
+
+        let accountID = authManager.currentAccount?.id
+        if !force,
+           didInitialLoad,
+           accountID == Self.cachedAccountID,
+           !adSenseAccounts.isEmpty {
+            return
+        }
+
         isLoading = true
         errorMsg = nil
         Task {
             let apiClient = APIClient(authManager: authManager)
             let client = AdSenseClient(apiClient: apiClient)
             do {
-                adSenseAccounts = try await client.listAccounts()
+                let fetched = try await client.listAccounts()
+                adSenseAccounts = fetched
+                Self.cachedAdSenseAccounts = fetched
+                Self.cachedAccountID = accountID
+                Self.cachedAt = Date()
+                didInitialLoad = true
             } catch {
                 errorMsg = "Failed to load: \(error.localizedDescription)"
             }
@@ -535,11 +621,12 @@ struct AdSenseAccountSection: View {
 struct BillingSettingsView: View {
     @State private var subscription = SubscriptionManager.shared
     @State private var licenseInput = ""
+    @State private var selectedCurrency = AppCurrency.fromStoredCode(SharedDataStore.shared.loadPreferredCurrency())
 
     var body: some View {
         Form {
             Section("Plan") {
-                HStack {
+                HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(subscription.isPro ? "DashDock Pro" : "DashDock Free")
                             .font(.headline)
@@ -567,6 +654,14 @@ struct BillingSettingsView: View {
                         .buttonStyle(.borderedProminent)
                     }
                 }
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Label("Monthly — $0.99 / month", systemImage: "calendar")
+                    Label("Annual — $9.99 / year", systemImage: "calendar.badge.clock")
+                    Label("3-day free trial on Annual", systemImage: "sparkles")
+                }
+                .font(.caption)
+                .foregroundStyle(.secondary)
             }
 
             Section("Activate License") {
@@ -609,6 +704,34 @@ struct BillingSettingsView: View {
                         .font(.caption)
                         .foregroundStyle(.red)
                 }
+            }
+
+            Section("Currency") {
+                Picker("Preferred Currency", selection: $selectedCurrency) {
+                    ForEach(AppCurrency.allCases, id: \.self) { currency in
+                        Text(currency.displayName).tag(currency)
+                    }
+                }
+                .pickerStyle(.menu)
+                .onChange(of: selectedCurrency) { _, newValue in
+                    SharedDataStore.shared.savePreferredCurrency(newValue.code)
+                }
+
+                Text("You can also say: \"Hey Siri, change DashDock currency to USD\".")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+
+            Section("Pro Features") {
+                VStack(alignment: .leading, spacing: 6) {
+                    Label("Widgets on Home Screen and Lock Screen", systemImage: "rectangle.3.group")
+                    Label("Apple Watch companion app", systemImage: "applewatch")
+                    Label("\"Hey Siri\" currency switching", systemImage: "mic")
+                    Label("Change currency", systemImage: "coloncurrencysign.circle")
+                    Label("Remove ads", systemImage: "nosign")
+                }
+                .font(.caption)
+                .foregroundStyle(.secondary)
             }
 
             Section {

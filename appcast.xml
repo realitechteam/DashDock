@@ -10,6 +10,27 @@
         <!-- Latest version should be the FIRST item -->
 
         <item>
+            <title>Version 1.1.2</title>
+            <sparkle:version>6</sparkle:version>
+            <sparkle:shortVersionString>1.1.2</sparkle:shortVersionString>
+            <description><![CDATA[
+                <h2>DashDock v1.1.2</h2>
+                <ul>
+                    <li>Added Polar billing activation and license validation flow in Settings</li>
+                    <li>Improved Settings UX with one-time load cache and freshness indicators</li>
+                    <li>Added tray actions for Settings, Hide, and Exit with keyboard shortcuts</li>
+                    <li>Enforced single-instance app behavior on macOS</li>
+                </ul>
+            ]]></description>
+            <pubDate>Sun, 19 Apr 2026 10:43:05 +0700</pubDate>
+            <enclosure
+                url="https://realitech.dev/dashdock/releases/DashDock-v1.1.2.dmg"
+                sparkle:edSignature="D0e0uEjkpOORTDeK1snbxWjr0HnWmutp7Esrdxc8po2JVFkUdisjggNv84EOY2OS6YqrcvwvpeiuGDLgfWK2Dg=="
+                length="1936039"
+                type="application/octet-stream" />
+        </item>
+
+        <item>
             <title>Version 1.1.1</title>
             <sparkle:version>5</sparkle:version>
             <sparkle:shortVersionString>1.1.1</sparkle:shortVersionString>
