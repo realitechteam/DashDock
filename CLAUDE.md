@@ -106,6 +106,21 @@ Widgets only read from `SharedDataStore` (no API calls). The main app calls `Wid
 
 Uses Sparkle with EdDSA signing. Feed at `appcast.xml`.
 
+## Polar Billing
+
+License activation flow:
+1. User clicks "Upgrade" in Settings → Billing → opens `POLAR_CHECKOUT_URL` in browser
+2. After purchase, Polar redirects to a success URL containing the license key
+3. App handles `dashdock://activate?key=<license_key>` to auto-activate
+4. Manual fallback: user pastes the key into Settings → Billing → Activate
+
+Configure the Polar checkout product's **Success URL** to:
+```
+dashdock://activate?key={license_key}
+```
+
+The URL scheme is registered in `DashDock/Resources/Info.plist` under `CFBundleURLTypes` and handled in `DashDockApp.handleURL`.
+
 ## Development Status
 
 Completed: GA4 MVP, comparative analytics (sparklines/trends), AdSense integration.
