@@ -1,0 +1,4 @@
+deploy/dashdock/releases/*.dmg
+deploy/dashdock/appcast.xml
+deploy/worker/.wrangler/
+deploy/dashdock/

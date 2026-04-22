@@ -1,0 +1,7 @@
+name = "dashdock-proxy"
+main = "src/index.js"
+compatibility_date = "2024-09-01"
+
+[[routes]]
+pattern = "realitech.dev/dashdock/*"
+zone_name = "realitech.dev"
